@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		BC29A3E70F68E11C65C69B95 /* libPods-Spawner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FEEB26E86BBC620E92DB26F /* libPods-Spawner.a */; };
-		E945859E1A4657D200F155EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E945859D1A4657D200F155EC /* main.m */; };
-		E94585A11A4657D200F155EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E94585A01A4657D200F155EC /* AppDelegate.m */; };
+		E945859E1A4657D200F155EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E945859D1A4657D200F155EC /* main.m */; settings = {COMPILER_FLAGS = "-w"; }; };
 		E94585A91A4657D200F155EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E94585A81A4657D200F155EC /* Images.xcassets */; };
 		E94585AC1A4657D200F155EC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E94585AA1A4657D200F155EC /* LaunchScreen.xib */; };
 		E94585B81A4657D200F155EC /* SpawnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E94585B71A4657D200F155EC /* SpawnerTests.m */; };
+		E9F6AE461A46732C00AD65DB /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F6AE451A46732C00AD65DB /* RootViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,13 +32,13 @@
 		E94585981A4657D200F155EC /* Spawner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spawner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E945859C1A4657D200F155EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E945859D1A4657D200F155EC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Spawner/main.m; sourceTree = "<group>"; };
-		E945859F1A4657D200F155EC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Spawner/AppDelegate.h; sourceTree = "<group>"; };
-		E94585A01A4657D200F155EC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Spawner/AppDelegate.m; sourceTree = "<group>"; };
 		E94585A81A4657D200F155EC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Spawner/Images.xcassets; sourceTree = "<group>"; };
 		E94585AB1A4657D200F155EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		E94585B11A4657D200F155EC /* SpawnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpawnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E94585B61A4657D200F155EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E94585B71A4657D200F155EC /* SpawnerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpawnerTests.m; sourceTree = "<group>"; };
+		E9F6AE441A46678300AD65DB /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = SOURCE_ROOT; };
+		E9F6AE451A46732C00AD65DB /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,9 +80,9 @@
 		E945858F1A4657D200F155EC = {
 			isa = PBXGroup;
 			children = (
+				E9F6AE441A46678300AD65DB /* main.h */,
 				E945859D1A4657D200F155EC /* main.m */,
-				E945859F1A4657D200F155EC /* AppDelegate.h */,
-				E94585A01A4657D200F155EC /* AppDelegate.m */,
+				E9F6AE451A46732C00AD65DB /* RootViewController.m */,
 				E94585A81A4657D200F155EC /* Images.xcassets */,
 				E945859B1A4657D200F155EC /* Supporting Files */,
 				E94585B41A4657D200F155EC /* SpawnerTests */,
@@ -262,7 +262,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E94585A11A4657D200F155EC /* AppDelegate.m in Sources */,
+				E9F6AE461A46732C00AD65DB /* RootViewController.m in Sources */,
 				E945859E1A4657D200F155EC /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
