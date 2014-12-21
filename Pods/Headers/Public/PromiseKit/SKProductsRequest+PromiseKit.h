@@ -1,0 +1,1 @@
+../../../PromiseKit/objc/deprecated/SKProductsRequest+PromiseKit.h
