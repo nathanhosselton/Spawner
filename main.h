@@ -1,8 +1,5 @@
 @import UIKit.UIViewController;
 
-@interface RootViewController : UIViewController
-@end
-
 typedef enum {
     BattleCreek,
     ChillOut,
@@ -21,6 +18,14 @@ typedef enum {
     Overshield,
     Naked
 } WeaponIdentifier;
+
+@interface RootViewController : UIViewController
+@property MapIdentifier currentMap;
+@end
+
+@interface MapPickerViewController : UIViewController
+@property NSArray const *mapNames;
+@end
 
 @interface TimeCalc : NSObject
 + (NSTimeInterval)timeforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;

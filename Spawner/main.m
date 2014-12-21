@@ -18,7 +18,7 @@ int main(int argc, char * argv[]) {
     self.window.backgroundColor = [UIColor whiteColor];
     self.window.tintColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
-
+    
     RootViewController *rv = [RootViewController new];
 
     self.window.rootViewController = rv;
