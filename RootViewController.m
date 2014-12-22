@@ -42,12 +42,13 @@
                                                    @"Chill Out",
                                                    @"Damnation",
                                                    @"Derelict",
-                                                   @"Hang 'Em High",
+                                                   @"Hang 'em High",
                                                    @"Longest",
                                                    @"Prisoner",
                                                    @"Rat Race",
                                                    @"Wizard", nil];
     labels = [NSMutableArray arrayWithCapacity:mapNames.count];
+    UILabel *lastLabel;
     for (NSString *map in mapNames) {
         UILabel *label = [[UILabel alloc] initWithFrame:mapLabelFrame];
         [label setCenter:CGPointMake(self.view.center.x, label.center.y)];
@@ -58,8 +59,9 @@
         label.userInteractionEnabled = YES;
         [label addGestureRecognizer:tap];
 
-        [self.view addSubview:label];
+        [self.view insertSubview:label belowSubview:lastLabel ? lastLabel : self.view];
         [labels addObject:label];
+        lastLabel = label;
     }
     self.currentMap = ((UILabel *)labels.firstObject).tag;
 
