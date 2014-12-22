@@ -15,8 +15,7 @@ int main(int argc, char * argv[]) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.backgroundColor = [UIColor whiteColor];
-    self.window.tintColor = [UIColor whiteColor];
+    self.window.backgroundColor = [UIColor colorWithRed:0.161 green:0.502 blue:0.725 alpha:1.000];
     [self.window makeKeyAndVisible];
     
     RootViewController *rv = [RootViewController new];
