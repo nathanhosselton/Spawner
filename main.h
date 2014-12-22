@@ -1,4 +1,8 @@
+#import <sym0.h>
+@import UIKit.UIScreen;
 @import UIKit.UIViewController;
+@import UIKit.UITableViewCell;
+@import UIKit.UILabel;
 
 typedef enum {
     BattleCreek,
@@ -23,8 +27,13 @@ typedef enum {
 @property MapIdentifier currentMap;
 @end
 
-@interface MapPickerViewController : UIViewController
-@property NSArray const *mapNames;
+#define WeaponImageViewSize 50.f
+
+@interface TimerCell : UITableViewCell
+@property NSTimer *thetimer;
+@property UILabel *timerLabel;
+@property UIImageView *primWpnImgView;
+@property UIImageView *subWpnImgView;
 @end
 
 @interface TimeCalc : NSObject
