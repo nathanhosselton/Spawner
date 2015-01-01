@@ -9,7 +9,7 @@
 @end
 
 @implementation RootViewController {
-    UILabel *mapNameLabel;
+    UILabel *currentLabel;
     UIButton *start;
     UITableView *tv;
     NSMutableArray *timers;
@@ -35,6 +35,17 @@
     [start setTitle:@"Start" forState:UIControlStateNormal];
     [start setTitle:@"Stop" forState:UIControlStateSelected];
     [start addTarget:self action:@selector(onstart:) forControlEvents:UIControlEventTouchUpInside];
+
+////// table
+    CGFloat ty = mapLabelHeight*5;
+    CGRect trect = CGRectMake(0, ty, UIScreenWidth, UIScreenHeight-ty);
+    tv = [[UITableView alloc] initWithFrame:trect style:UITableViewStylePlain];
+    [tv setBackgroundView:nil];
+    [tv setBackgroundColor:[UIColor clearColor]];
+    [tv registerClass:[TimerCell class] forCellReuseIdentifier:NSStringFromClass(TimerCell.class)];
+    [self.view addSubview:tv];
+    tv.delegate = self;
+    tv.dataSource = self;
 
 ////// map picker
     NSArray *mapNames = [NSArray arrayWithObjects: @"Battle Creek",
@@ -65,17 +76,7 @@
         lastLabel = label;
     }
     self.currentMap = ((UILabel *)labels.firstObject).tag;
-
-////// table
-    CGFloat ty = mapLabelHeight*5;
-    CGRect trect = CGRectMake(0, ty, UIScreenWidth, UIScreenHeight-ty);
-    tv = [[UITableView alloc] initWithFrame:trect style:UITableViewStylePlain];
-    [tv setBackgroundView:nil];
-    [tv setBackgroundColor:[UIColor clearColor]];
-    [tv registerClass:[TimerCell class] forCellReuseIdentifier:NSStringFromClass(TimerCell.class)];
-    [self.view addSubview:tv];
-    tv.delegate = self;
-    tv.dataSource = self;
+    currentLabel = labels.firstObject;
 
 //////
     timers = [NSMutableArray arrayWithCapacity:4];
@@ -112,6 +113,10 @@
     return [UIColor clearColor];
 }
 
+- (BOOL)mapListIsExpanded {
+    return !(CGRectEqualToRect(currentLabel.frame, mapLabelFrame));
+}
+
 - (void)onstart:(UIButton *)button {
     if (button.state == UIControlStateHighlighted) {
         // Start timers
@@ -126,6 +131,27 @@
 
 - (void)ontap:(UITapGestureRecognizer *)tap {
     NSLog(@"%@ tapped", ((UILabel *)tap.view).text);
+    __block CGFloat y;
+    if (self.mapListIsExpanded) {
+////// Put selected map label on top
+        [self.view bringSubviewToFront:tap.view];
+////// Contract maps list
+        [UIView animateWithDuration:0.2 animations:^{
+            for (UILabel *label in labels)
+                label.frame = mapLabelFrame;
+        }];
+////// Set selected map/label as current
+        self.currentMap = tap.view.tag;
+        currentLabel = (UILabel *)tap.view;
+////// Create cells for map
+    } else {
+        [UIView animateWithDuration:0.2 animations:^{
+            for (UILabel *label in labels) {
+                y = (label.frame.size.height*1.1)*(label.tag+1);
+                label.center = CGPointMake(label.center.x, y);
+            }
+        }];
+    }
 }
 
 @end
