@@ -37,7 +37,6 @@
     [start addTarget:self action:@selector(onstart:) forControlEvents:UIControlEventTouchUpInside];
 
 ////// map picker
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ontap:)];
     NSArray *mapNames = [NSArray arrayWithObjects: @"Battle Creek",
                                                    @"Chill Out",
                                                    @"Damnation",
@@ -57,6 +56,8 @@
         [label setTextAlignment:NSTextAlignmentCenter];
         [label setBackgroundColor:[self colorForMapIndex:label.tag]];
         label.userInteractionEnabled = YES;
+
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ontap:)];
         [label addGestureRecognizer:tap];
 
         [self.view insertSubview:label belowSubview:lastLabel ? lastLabel : self.view];
@@ -87,7 +88,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TimerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(TimerCell.class) forIndexPath:indexPath];
 
-    cell.thetimer = [timers objectAtIndex:indexPath.row];
+    cell.timer = [timers objectAtIndex:indexPath.row];
     [cell setBackgroundView:nil];
     [cell setBackgroundColor:[self colorForMapIndex:_currentMap]];
     //TODO: Create weapon images
@@ -112,20 +113,19 @@
 }
 
 - (void)onstart:(UIButton *)button {
-    NSLog(@"%u", button.state);
-    if (button.state == UIControlStateNormal) {
+    if (button.state == UIControlStateHighlighted) {
         // Start timers
 
         [button setSelected:YES];
-    } else if (button.state == UIControlStateSelected) {
+    } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
         // Stop timers
 
         [button setSelected:NO];
     }
 }
 
-- (void)ontap:(UILabel *)label {
-    NSLog(@"Tapped");
+- (void)ontap:(UITapGestureRecognizer *)tap {
+    NSLog(@"%@ tapped", ((UILabel *)tap.view).text);
 }
 
 @end

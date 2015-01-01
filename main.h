@@ -30,7 +30,7 @@ typedef enum {
 #define WeaponImageViewSize 50.f
 
 @interface TimerCell : UITableViewCell
-@property NSTimer *thetimer;
+@property NSTimer *timer;
 @property UILabel *timerLabel;
 @property UIImageView *primWpnImgView;
 @property UIImageView *subWpnImgView;
