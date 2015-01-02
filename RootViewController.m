@@ -12,6 +12,7 @@
     UILabel *currentLabel;
     UIButton *start;
     UITableView *tv;
+    NSTimer *timer;
     NSMutableArray *timers;
     NSMutableArray *labels;
     CGFloat mapLabelHeight;
@@ -42,6 +43,7 @@
     tv = [[UITableView alloc] initWithFrame:trect style:UITableViewStylePlain];
     [tv setBackgroundView:nil];
     [tv setBackgroundColor:[UIColor clearColor]];
+    [tv setUserInteractionEnabled:NO];
     [tv registerClass:[TimerCell class] forCellReuseIdentifier:NSStringFromClass(TimerCell.class)];
     [self.view addSubview:tv];
     tv.delegate = self;
@@ -80,6 +82,7 @@
 
 //////
     timers = [NSMutableArray arrayWithCapacity:4];
+    [self setupTimers];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -89,13 +92,27 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TimerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(TimerCell.class) forIndexPath:indexPath];
 
-    cell.timer = [timers objectAtIndex:indexPath.row];
+    cell.time = [timers objectAtIndex:indexPath.row];
     [cell setBackgroundView:nil];
     [cell setBackgroundColor:[self colorForMapIndex:_currentMap]];
     //TODO: Create weapon images
     [cell layoutSubviews];
 
     return cell;
+}
+
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return 100.f;
+//}
+
+- (void)setupTimers {
+    [timers removeAllObjects];
+    for (int i = 0; i <= sizeof(WeaponIdentifier); i++) {
+        NSNumber *time = [TimeCalc timeforMap:self.currentMap weapon:i];
+        if (time.integerValue > 0)
+            [timers addObject:time];
+    }
+    [tv reloadData];
 }
 
 - (UIColor *)colorForMapIndex:(MapIdentifier)mapIndex {
@@ -119,31 +136,33 @@
 
 - (void)onstart:(UIButton *)button {
     if (button.state == UIControlStateHighlighted) {
-        // Start timers
-
+        timer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(ontime:) userInfo:nil repeats:YES];
         [button setSelected:YES];
     } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
-        // Stop timers
-
+        [timer invalidate];
+        [self setupTimers];
         [button setSelected:NO];
     }
 }
 
+- (void)ontime:(NSTimer *)timer {
+    for (TimerCell *cell in [tv visibleCells])
+        [cell.timerLabel decrementTimer];
+}
+
 - (void)ontap:(UITapGestureRecognizer *)tap {
-    NSLog(@"%@ tapped", ((UILabel *)tap.view).text);
+//    NSLog(@"%@ tapped", ((UILabel *)tap.view).text);
     __block CGFloat y;
     if (self.mapListIsExpanded) {
-////// Put selected map label on top
         [self.view bringSubviewToFront:tap.view];
-////// Contract maps list
         [UIView animateWithDuration:0.2 animations:^{
             for (UILabel *label in labels)
                 label.frame = mapLabelFrame;
         }];
-////// Set selected map/label as current
+
         self.currentMap = tap.view.tag;
         currentLabel = (UILabel *)tap.view;
-////// Create cells for map
+        [self setupTimers];
     } else {
         [UIView animateWithDuration:0.2 animations:^{
             for (UILabel *label in labels) {

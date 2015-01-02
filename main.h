@@ -29,13 +29,18 @@ typedef enum {
 
 #define WeaponImageViewSize 50.f
 
+@interface TimerLabel : UILabel
+- (void)decrementTimer;
+@end
+
 @interface TimerCell : UITableViewCell
-@property NSTimer *timer;
-@property UILabel *timerLabel;
+@property NSNumber *time;
+@property TimerLabel *timerLabel;
 @property UIImageView *primWpnImgView;
 @property UIImageView *subWpnImgView;
 @end
 
+
 @interface TimeCalc : NSObject
-+ (NSTimeInterval)timeforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
++ (NSNumber *)timeforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
 @end

@@ -2,21 +2,21 @@
 
 @implementation TimeCalc
 
-+ (NSTimeInterval)timeforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon {
++ (NSNumber *)timeforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon {
     if (weapon == Rockets) {
         switch (map) {
             case Derelict:
-                return 30;
+                return @30;
             case BattleCreek:
             case ChillOut:
             case Damnation:
             case HangEmHigh:
             case Prisoner:
-                return 120;
+                return @120;
             case Longest:
             case RatRace:
             case Wizard:
-                return 0;
+                return @0;
         }
     } else if (weapon == Sniper) {
         switch (map) {
@@ -25,13 +25,13 @@
             case Derelict:
             case HangEmHigh:
             case Prisoner:
-                return 30;
+                return @30;
             case ChillOut:
-                return 60;
+                return @60;
             case Longest:
             case RatRace:
             case Wizard:
-                return 0;
+                return @0;
         }
     } else if (weapon == Overshield) {
         switch (map) {
@@ -43,9 +43,9 @@
             case Prisoner:
             case RatRace:
             case Wizard:
-                return 60;
+                return @60;
             case HangEmHigh:
-                return 180;
+                return @180;
         }
     } else if (weapon == Naked) {
         switch (map) {
@@ -56,13 +56,13 @@
             case Longest:
             case Prisoner:
             case Wizard:
-                return 60;
+                return @60;
             case RatRace:
-                return 90;
+                return @90;
             case ChillOut:
-                return 120;
+                return @120;
         }
     }
-    return 0;
+    return @0;
 }
 @end
