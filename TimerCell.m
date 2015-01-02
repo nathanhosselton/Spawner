@@ -7,7 +7,7 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         [self addSubview:_primWpnImgView = [UIImageView new]];
         [self addSubview:_subWpnImgView = [UIImageView new]];
-        [self addSubview:_timerLabel = [TimerLabel new]];
+        [self addSubview:_timerLabel = [UILabel new]];
     }
     return self;
 }
@@ -24,6 +24,14 @@
     _timerLabel.frame = CGRectMake(UIScreenWidth-50.f, 0, 50.f, 20.f);
 //    _timerLabel.center = CGPointMake(_timerLabel.center.x, self.center.y);
     _timerLabel.text = self.time.stringValue;
+}
+
+- (void)decrementTimer {
+    int count = _timerLabel.text.intValue;
+    _timerLabel.text = [NSString stringWithFormat:@"%d", --count];
+
+    if (count == 0)
+        [self.delegate timerDidReachZero:self];
 }
 
 @end
