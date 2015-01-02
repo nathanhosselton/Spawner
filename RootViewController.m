@@ -108,7 +108,11 @@
 //}
 
 - (void)timerDidReachZero:(TimerCell *)cell {
-    
+    NSIndexPath *path = [tv indexPathForCell:cell];
+    [tv beginUpdates];
+    [tv deleteRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationLeft];
+    [tv insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationRight];
+    [tv endUpdates];
 }
 
 - (void)setupTimers {
