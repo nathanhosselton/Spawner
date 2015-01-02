@@ -5,7 +5,7 @@
 @import UIKit.UIScreen;
 @import UIKit.UITapGestureRecognizer;
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerCellDelegate>
 @end
 
 @implementation RootViewController {
@@ -43,6 +43,7 @@
     tv = [[UITableView alloc] initWithFrame:trect style:UITableViewStylePlain];
     [tv setBackgroundView:nil];
     [tv setBackgroundColor:[UIColor clearColor]];
+    [tv setSeparatorColor:[UIColor colorWithWhite:0.100 alpha:1.000]];
     [tv setUserInteractionEnabled:NO];
     [tv registerClass:[TimerCell class] forCellReuseIdentifier:NSStringFromClass(TimerCell.class)];
     [self.view addSubview:tv];
@@ -93,6 +94,7 @@
     TimerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(TimerCell.class) forIndexPath:indexPath];
 
     cell.time = [timers objectAtIndex:indexPath.row];
+    cell.delegate = self;
     [cell setBackgroundView:nil];
     [cell setBackgroundColor:[self colorForMapIndex:_currentMap]];
     //TODO: Create weapon images
@@ -102,8 +104,12 @@
 }
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return 100.f;
+//    return tableView.frame.size.height/timers.count;
 //}
+
+- (void)timerDidReachZero:(TimerCell *)cell {
+    
+}
 
 - (void)setupTimers {
     [timers removeAllObjects];
@@ -147,7 +153,7 @@
 
 - (void)ontime:(NSTimer *)timer {
     for (TimerCell *cell in [tv visibleCells])
-        [cell.timerLabel decrementTimer];
+        [cell decrementTimer];
 }
 
 - (void)ontap:(UITapGestureRecognizer *)tap {
