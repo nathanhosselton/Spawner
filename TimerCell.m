@@ -23,7 +23,7 @@
 ////// timer
     _timerLabel.frame = CGRectMake(UIScreenWidth-50.f, 0, 50.f, 20.f);
 //    _timerLabel.center = CGPointMake(_timerLabel.center.x, self.center.y);
-    _timerLabel.text = self.time.stringValue;
+    _timerLabel.text = self.package.time.stringValue;
 }
 
 - (void)decrementTimer {

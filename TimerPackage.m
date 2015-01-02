@@ -1,22 +1,30 @@
 #import "main.h"
 
-@implementation TimeCalc
+@implementation TimerPackage
 
-+ (NSNumber *)timeforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon {
++ (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon {
+    TimerPackage *package = [TimerPackage new];
+    package.weapons = [NSMutableArray arrayWithObject:@(weapon)];
+    package.map = map;
+    package.time = @0;
+
     if (weapon == Rockets) {
         switch (map) {
             case Derelict:
-                return @30;
+                package.time = @30;
+                break;
             case BattleCreek:
             case ChillOut:
             case Damnation:
             case HangEmHigh:
             case Prisoner:
-                return @120;
+                package.time = @120;
+                break;
             case Longest:
             case RatRace:
             case Wizard:
-                return @0;
+                package.time = @0;
+                break;
         }
     } else if (weapon == Sniper) {
         switch (map) {
@@ -25,13 +33,16 @@
             case Derelict:
             case HangEmHigh:
             case Prisoner:
-                return @30;
+                package.time = @30;
+                break;
             case ChillOut:
-                return @60;
+                package.time = @60;
+                break;
             case Longest:
             case RatRace:
             case Wizard:
-                return @0;
+                package.time = @0;
+                break;
         }
     } else if (weapon == Overshield) {
         switch (map) {
@@ -43,9 +54,11 @@
             case Prisoner:
             case RatRace:
             case Wizard:
-                return @60;
+                package.time = @60;
+                break;
             case HangEmHigh:
-                return @180;
+                package.time = @180;
+                break;
         }
     } else if (weapon == Naked) {
         switch (map) {
@@ -56,13 +69,22 @@
             case Longest:
             case Prisoner:
             case Wizard:
-                return @60;
+                package.time = @60;
+                break;
             case RatRace:
-                return @90;
+                package.time = @90;
+                break;
             case ChillOut:
-                return @120;
+                package.time = @120;
+                break;
         }
     }
-    return @0;
+
+    return package;
 }
+
+- (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage {
+    return [self.time compare:otherPackage.time];
+}
+
 @end

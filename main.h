@@ -29,20 +29,23 @@ typedef enum {
 
 #define WeaponImageViewSize 50.f
 
+@interface TimerPackage : NSObject
++ (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
+@property NSMutableArray *weapons;
+@property MapIdentifier map;
+@property NSNumber *time;
+- (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage;
+@end
+
 @protocol TimerCellDelegate
 - (void)timerDidReachZero:(id)cell;
 @end
 
 @interface TimerCell : UITableViewCell
-@property NSNumber *time;
+@property TimerPackage *package;
 @property UILabel *timerLabel;
 @property UIImageView *primWpnImgView;
 @property UIImageView *subWpnImgView;
 @property (nonatomic, weak) id<TimerCellDelegate> delegate;
 - (void)decrementTimer;
-@end
-
-
-@interface TimeCalc : NSObject
-+ (NSNumber *)timeforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
 @end

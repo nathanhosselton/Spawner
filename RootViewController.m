@@ -23,7 +23,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-//////
     mapLabelHeight = 50.f;
     mapLabelWidth = UIScreenWidth*(2.f/3.f);
     CGFloat lx = (UIScreenWidth - mapLabelWidth)/2;
@@ -93,7 +92,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TimerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(TimerCell.class) forIndexPath:indexPath];
 
-    cell.time = [timers objectAtIndex:indexPath.row];
+    cell.package = [timers objectAtIndex:indexPath.row];
     cell.delegate = self;
     [cell setBackgroundView:nil];
     [cell setBackgroundColor:[self colorForMapIndex:_currentMap]];
@@ -118,10 +117,11 @@
 - (void)setupTimers {
     [timers removeAllObjects];
     for (int i = 0; i <= sizeof(WeaponIdentifier); i++) {
-        NSNumber *time = [TimeCalc timeforMap:self.currentMap weapon:i];
-        if (time.integerValue > 0)
-            [timers addObject:time];
+        TimerPackage *package = [TimerPackage packageforMap:self.currentMap weapon:i];
+        if (package.time.integerValue > 0)
+            [timers addObject:package];
     }
+    [timers sortUsingSelector:@selector(comparePackage:)];
     [tv reloadData];
 }
 
@@ -158,11 +158,11 @@
 - (void)ontime:(NSTimer *)timer {
     for (TimerCell *cell in [tv visibleCells])
         [cell decrementTimer];
+
 }
 
 - (void)ontap:(UITapGestureRecognizer *)tap {
 //    NSLog(@"%@ tapped", ((UILabel *)tap.view).text);
-    __block CGFloat y;
     if (self.mapListIsExpanded) {
         [self.view bringSubviewToFront:tap.view];
         [UIView animateWithDuration:0.2 animations:^{
@@ -174,6 +174,7 @@
         currentLabel = (UILabel *)tap.view;
         [self setupTimers];
     } else {
+        __block CGFloat y;
         [UIView animateWithDuration:0.2 animations:^{
             for (UILabel *label in labels) {
                 y = (label.frame.size.height*1.1)*(label.tag+1);
