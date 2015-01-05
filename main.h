@@ -29,11 +29,18 @@ typedef enum {
 
 #define WeaponImageViewSize 50.f
 
+@protocol TimerPackageDelegate
+- (void)timerPackageWasMerged:(id)oldPackage intoPackage:(id)package;
+@end
+
 @interface TimerPackage : NSObject
 + (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
 @property NSMutableArray *weapons;
 @property MapIdentifier map;
 @property NSNumber *time;
+@property BOOL shouldExpire;
+@property (nonatomic, weak) id<TimerPackageDelegate> delegate;
+- (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon;
 - (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage;
 @end
 

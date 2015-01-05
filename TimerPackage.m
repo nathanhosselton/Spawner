@@ -6,85 +6,84 @@
     TimerPackage *package = [TimerPackage new];
     package.weapons = [NSMutableArray arrayWithObject:@(weapon)];
     package.map = map;
-    package.time = @0;
+    package.time = [package timeForWeapon:weapon];
 
-    if (weapon == Rockets) {
-        switch (map) {
-            case Derelict:
-                package.time = @30;
-                break;
-            case BattleCreek:
-            case ChillOut:
-            case Damnation:
-            case HangEmHigh:
-            case Prisoner:
-                package.time = @120;
-                break;
-            case Longest:
-            case RatRace:
-            case Wizard:
-                package.time = @0;
-                break;
-        }
-    } else if (weapon == Sniper) {
-        switch (map) {
-            case BattleCreek:
-            case Damnation:
-            case Derelict:
-            case HangEmHigh:
-            case Prisoner:
-                package.time = @30;
-                break;
-            case ChillOut:
-                package.time = @60;
-                break;
-            case Longest:
-            case RatRace:
-            case Wizard:
-                package.time = @0;
-                break;
-        }
-    } else if (weapon == Overshield) {
-        switch (map) {
-            case BattleCreek:
-            case ChillOut:
-            case Damnation:
-            case Derelict:
-            case Longest:
-            case Prisoner:
-            case RatRace:
-            case Wizard:
-                package.time = @60;
-                break;
-            case HangEmHigh:
-                package.time = @180;
-                break;
-        }
-    } else if (weapon == Naked) {
-        switch (map) {
-            case BattleCreek:
-            case Damnation:
-            case Derelict:
-            case HangEmHigh:
-            case Longest:
-            case Prisoner:
-            case Wizard:
-                package.time = @60;
-                break;
-            case RatRace:
-                package.time = @90;
-                break;
-            case ChillOut:
-                package.time = @120;
-                break;
-        }
-    }
-
-    return package;
+    return package.time ? package : nil;
 }
 
 - (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage {
-    return [self.time compare:otherPackage.time];
+    NSComparisonResult result = [self.time compare:otherPackage.time];
+    if (result == NSOrderedSame) {
+        [self.weapons addObjectsFromArray:otherPackage.weapons];
+        self.shouldExpire = NO;
+        otherPackage.shouldExpire = YES;
+        [self.delegate timerPackageWasMerged:otherPackage intoPackage:self];
+    }
+    return result;
+}
+
+- (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon {
+    if (weapon == Rockets) {
+        switch (self.map) {
+            case Derelict:
+                return @30;
+            case BattleCreek:
+            case ChillOut:
+            case Damnation:
+            case HangEmHigh:
+            case Prisoner:
+                return @120;
+            case Longest:
+            case RatRace:
+            case Wizard:
+                break;
+        }
+    } else if (weapon == Sniper) {
+        switch (self.map) {
+            case BattleCreek:
+            case Damnation:
+            case Derelict:
+            case HangEmHigh:
+            case Prisoner:
+                return @30;
+            case ChillOut:
+                return @60;
+            case Longest:
+            case RatRace:
+            case Wizard:
+                break;
+        }
+    } else if (weapon == Overshield) {
+        switch (self.map) {
+            case BattleCreek:
+            case ChillOut:
+            case Damnation:
+            case Derelict:
+            case Longest:
+            case Prisoner:
+            case RatRace:
+            case Wizard:
+                return @60;
+            case HangEmHigh:
+                return @180;
+        }
+    } else if (weapon == Naked) {
+        switch (self.map) {
+            case BattleCreek:
+            case Damnation:
+            case Derelict:
+            case HangEmHigh:
+            case Longest:
+            case Prisoner:
+            case Wizard:
+                return @60;
+            case RatRace:
+                return @90;
+            case ChillOut:
+                return @120;
+        }
+    }
+    return nil;
 }
 
 @end

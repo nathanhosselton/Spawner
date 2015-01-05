@@ -5,36 +5,38 @@
 @import UIKit.UIScreen;
 @import UIKit.UITapGestureRecognizer;
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerCellDelegate>
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerCellDelegate, TimerPackageDelegate>
+@property BOOL shouldValidateTimers;
 @end
 
 @implementation RootViewController {
     UILabel *currentLabel;
-    UIButton *start;
     UITableView *tv;
     NSTimer *timer;
     NSMutableArray *timers;
     NSMutableArray *labels;
-    CGFloat mapLabelHeight;
-    CGFloat mapLabelWidth;
     CGRect mapLabelFrame;
 }
+
+@synthesize shouldValidateTimers = _shouldValidateTimers;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    mapLabelHeight = 50.f;
-    mapLabelWidth = UIScreenWidth*(2.f/3.f);
+
+    CGFloat mapLabelHeight = 50.f;
+    CGFloat mapLabelWidth = UIScreenWidth*(2.f/3.f);
     CGFloat lx = (UIScreenWidth - mapLabelWidth)/2;
     mapLabelFrame = CGRectMake(lx, mapLabelHeight, mapLabelWidth, mapLabelHeight);
 
 ////// button
-    [self.view addSubview:start = [UIButton buttonWithType:UIButtonTypeCustom]];
+    UIButton *start = [UIButton buttonWithType:UIButtonTypeCustom];
     [start setFrame:CGRectMake(0, mapLabelHeight*3, 100.f, 50.f)];
     [start setCenter:CGPointMake(self.view.center.x, start.center.y)];
     [start setTitle:@"Start" forState:UIControlStateNormal];
     [start setTitle:@"Stop" forState:UIControlStateSelected];
     [start addTarget:self action:@selector(onstart:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:start];
 
 ////// table
     CGFloat ty = mapLabelHeight*5;
@@ -63,11 +65,11 @@
     UILabel *lastLabel;
     for (NSString *map in mapNames) {
         UILabel *label = [[UILabel alloc] initWithFrame:mapLabelFrame];
-        [label setCenter:CGPointMake(self.view.center.x, label.center.y)];
+        label.center = CGPointMake(self.view.center.x, label.center.y);
         label.text = map;
         label.tag = [mapNames indexOfObject:map];
-        [label setTextAlignment:NSTextAlignmentCenter];
-        [label setBackgroundColor:[self colorForMapIndex:label.tag]];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.backgroundColor = [self colorForMapIndex:(MapIdentifier)label.tag];
         label.userInteractionEnabled = YES;
 
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ontap:)];
@@ -77,7 +79,7 @@
         [labels addObject:label];
         lastLabel = label;
     }
-    self.currentMap = ((UILabel *)labels.firstObject).tag;
+    self.currentMap = (MapIdentifier)((UILabel *)labels.firstObject).tag;
     currentLabel = labels.firstObject;
 
 //////
@@ -94,8 +96,8 @@
 
     cell.package = [timers objectAtIndex:indexPath.row];
     cell.delegate = self;
-    [cell setBackgroundView:nil];
-    [cell setBackgroundColor:[self colorForMapIndex:_currentMap]];
+    cell.backgroundView = nil;
+    cell.backgroundColor = [self colorForMapIndex:_currentMap];
     //TODO: Create weapon images
     [cell layoutSubviews];
 
@@ -114,15 +116,29 @@
     [tv endUpdates];
 }
 
+- (void)timerPackageWasMerged:(TimerPackage *)oldPackage intoPackage:(TimerPackage *)package {
+    self.shouldValidateTimers = YES;
+}
+
 - (void)setupTimers {
     [timers removeAllObjects];
     for (int i = 0; i <= sizeof(WeaponIdentifier); i++) {
         TimerPackage *package = [TimerPackage packageforMap:self.currentMap weapon:i];
-        if (package.time.integerValue > 0)
+        if (package) {
+            package.delegate = self;
             [timers addObject:package];
+        }
     }
-    [timers sortUsingSelector:@selector(comparePackage:)];
+    [self validateTimers];
     [tv reloadData];
+}
+
+- (void)validateTimers {
+    [timers sortUsingSelector:@selector(comparePackage:)];
+    for (TimerPackage *package in timers.copy)
+        !package.shouldExpire ?: [timers removeObject:package];
+    if (self.shouldValidateTimers)
+        [self validateTimers];
 }
 
 - (UIColor *)colorForMapIndex:(MapIdentifier)mapIndex {
@@ -147,10 +163,14 @@
 - (void)onstart:(UIButton *)button {
     if (button.state == UIControlStateHighlighted) {
         timer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(ontime:) userInfo:nil repeats:YES];
+        for (UILabel *label in labels)
+            label.userInteractionEnabled = NO;
         [button setSelected:YES];
     } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
         [timer invalidate];
         [self setupTimers];
+        for (UILabel *label in labels)
+            label.userInteractionEnabled = YES;
         [button setSelected:NO];
     }
 }
@@ -158,7 +178,6 @@
 - (void)ontime:(NSTimer *)timer {
     for (TimerCell *cell in [tv visibleCells])
         [cell decrementTimer];
-
 }
 
 - (void)ontap:(UITapGestureRecognizer *)tap {
@@ -169,8 +188,7 @@
             for (UILabel *label in labels)
                 label.frame = mapLabelFrame;
         }];
-
-        self.currentMap = tap.view.tag;
+        self.currentMap = (MapIdentifier)tap.view.tag;
         currentLabel = (UILabel *)tap.view;
         [self setupTimers];
     } else {
@@ -182,6 +200,16 @@
             }
         }];
     }
+}
+
+- (BOOL)shouldValidateTimers {
+    BOOL ret = _shouldValidateTimers;
+    _shouldValidateTimers = NO;
+    return ret;
+}
+
+- (void)setShouldValidateTimers:(BOOL)shouldValidateTimers {
+    _shouldValidateTimers = shouldValidateTimers;
 }
 
 @end
