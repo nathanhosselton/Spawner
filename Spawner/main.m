@@ -1,4 +1,4 @@
-@import UIKit;
+@import UIKit.UIWindow;
 #import "main.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>

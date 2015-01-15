@@ -31,6 +31,27 @@
     self.package.time = @(count);
     _timerLabel.text = [NSString stringWithFormat:@"%d", count];
 
+    switch (count) {
+        case 10:
+            for (NSNumber *weapon in self.package.weapons)
+                [SPAnnounce weapon:weapon.intValue];
+            break;
+        case 9:
+        case 8:
+        case 7:
+        case 6:
+        case 5:
+        case 4:
+        case 3:
+        case 2:
+        case 1:
+            [SPAnnounce count:@(count)];
+            break;
+
+        default:
+            break;
+    }
+
     if (count == 0){
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(100 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
             [self.delegate timerDidReachZero:self];

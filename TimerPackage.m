@@ -15,7 +15,10 @@
     NSLog(@"current pack: %@ other pack: %@", self.time, otherPackage.time);
     NSComparisonResult result = [self.time compare:otherPackage.time];
     if (result == NSOrderedSame) {
-        [self.weapons addObjectsFromArray:otherPackage.weapons];
+        for (NSNumber *weapon in otherPackage.weapons) {
+            if (![self.weapons containsObject:weapon])
+                [self.weapons addObject:weapon];
+        }
         self.shouldExpire = NO;
         otherPackage.shouldExpire = YES;
         [self.delegate timerPackageWasMerged:otherPackage intoPackage:self];

@@ -56,3 +56,8 @@ typedef enum {
 @property (nonatomic, weak) id<TimerCellDelegate> delegate;
 - (void)decrementTimer;
 @end
+
+@interface SPAnnounce : NSObject
++ (void)weapon:(WeaponIdentifier)weapon;
++ (void)count:(NSNumber *)count;
+@end

@@ -188,7 +188,7 @@
     }
 }
 
-- (void)ontime:(NSTimer *)timer {
+- (void)ontime:(NSTimer *)time {
     for (TimerCell *cell in [tv visibleCells])
         [cell decrementTimer];
 }
