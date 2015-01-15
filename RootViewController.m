@@ -109,12 +109,28 @@
 //}
 
 - (void)timerDidReachZero:(TimerCell *)cell {
-    NSIndexPath *path = [tv indexPathForCell:cell];
     [tv beginUpdates];
-    [tv deleteRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationLeft];
-    [tv insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationRight];
-    [tv endUpdates];
-}
+    int oldcount = (int)timers.count;
+    [timers removeObject:cell.package];
+
+    for (NSNumber *weapon in cell.package.weapons) {
+        TimerPackage *package = [TimerPackage packageforMap:self.currentMap weapon:weapon.intValue];
+        package.delegate = self;
+        [timers addObject:package];
+    }
+    [self validateTimers];
+
+    if (timers.count > oldcount) {
+        int dif = (int)timers.count - oldcount;
+        for (int i = 0; i < dif; i++) {
+            NSIndexPath *path = [NSIndexPath indexPathForRow:[tv indexPathForCell:cell].row+i inSection:[tv indexPathForCell:cell].section];
+            [tv insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationLeft];
+        }
+    } else if (timers.count < oldcount)
+        [tv deleteRowsAtIndexPaths:@[[tv indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationLeft];
+
+    [tv reloadData];
+    [tv endUpdates];}
 
 - (void)timerPackageWasMerged:(TimerPackage *)oldPackage intoPackage:(TimerPackage *)package {
     self.shouldValidateTimers = YES;
@@ -136,7 +152,8 @@
 - (void)validateTimers {
     [timers sortUsingSelector:@selector(comparePackage:)];
     for (TimerPackage *package in timers.copy)
-        !package.shouldExpire ?: [timers removeObject:package];
+        if (package.shouldExpire)
+            [timers removeObject:package];
     if (self.shouldValidateTimers)
         [self validateTimers];
 }
@@ -154,10 +171,6 @@
         case Wizard: return [UIColor colorWithRed:0.895 green:0.903 blue:0.657 alpha:1.000];
     }
     return [UIColor clearColor];
-}
-
-- (BOOL)mapListIsExpanded {
-    return !(CGRectEqualToRect(currentLabel.frame, mapLabelFrame));
 }
 
 - (void)onstart:(UIButton *)button {
@@ -200,6 +213,10 @@
             }
         }];
     }
+}
+
+- (BOOL)mapListIsExpanded {
+    return !(CGRectEqualToRect(currentLabel.frame, mapLabelFrame));
 }
 
 - (BOOL)shouldValidateTimers {

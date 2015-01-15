@@ -12,6 +12,7 @@
 }
 
 - (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage {
+    NSLog(@"current pack: %@ other pack: %@", self.time, otherPackage.time);
     NSComparisonResult result = [self.time compare:otherPackage.time];
     if (result == NSOrderedSame) {
         [self.weapons addObjectsFromArray:otherPackage.weapons];
