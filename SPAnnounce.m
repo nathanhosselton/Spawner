@@ -1,45 +1,55 @@
-#import "main.h"
-#import <PromiseKit.h>
 #import <AVFoundation/AVSpeechSynthesis.h>
 
-static AVSpeechSynthesizer *synth;
+@implementation AVSpeechSynthesizer (SPAnnounce)
+
+- (void)say:(NSString *)speech {
+//TODO: Create custom utterance with app standards and user defaults
+    AVSpeechUtterance *utter = [AVSpeechUtterance speechUtteranceWithString:speech];
+
+    [self speakUtterance:utter];
+}
+
+@end
+
+
+
+#import "main.h"
+#import <PromiseKit.h>
+
+static AVSpeechSynthesizer *announcer;
 
 @implementation SPAnnounce
 
 + (void)load {
     [NSNotificationCenter once:UIApplicationDidFinishLaunchingNotification].then(^{
-        synth = [AVSpeechSynthesizer new];
+        announcer = [AVSpeechSynthesizer new];
     });
 }
 
 + (void)weapon:(WeaponIdentifier)weapon {
-    NSString *speak;
+    NSString *speech;
 
     switch (weapon) {
         case Rockets:
-            speak = @"rockets";
+            speech = @"rockets";
             break;
         case Sniper:
-            speak = @"sniper";
+            speech = @"sniper";
             break;
         case Overshield:
-            speak = @"over shield";
+            speech = @"over shield";
             break;
         case Naked:
-            speak = @"naked";
+            speech = @"naked";
             break;
     }
 
-    AVSpeechUtterance *utter = [AVSpeechUtterance speechUtteranceWithString:speak];
-
-    [synth speakUtterance:utter];
+    [announcer say:speech];
 }
 
 + (void)count:(NSNumber *)count {
-    if (!synth.speaking) {
-        AVSpeechUtterance *utter = [AVSpeechUtterance speechUtteranceWithString:count.stringValue];
-        [synth speakUtterance:utter];
-    }
+    if (![announcer isSpeaking])
+        [announcer say:count.stringValue];
 }
 
 @end

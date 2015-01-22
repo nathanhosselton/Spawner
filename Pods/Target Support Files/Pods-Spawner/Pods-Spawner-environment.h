@@ -6,53 +6,23 @@
 // project.
 
 
+// Doppelganger
+#define COCOAPODS_POD_AVAILABLE_Doppelganger
+#define COCOAPODS_VERSION_MAJOR_Doppelganger 1
+#define COCOAPODS_VERSION_MINOR_Doppelganger 3
+#define COCOAPODS_VERSION_PATCH_Doppelganger 0
+
 // PromiseKit/NSNotificationCenter
 #define COCOAPODS_POD_AVAILABLE_PromiseKit_NSNotificationCenter
 #define COCOAPODS_VERSION_MAJOR_PromiseKit_NSNotificationCenter 1
 #define COCOAPODS_VERSION_MINOR_PromiseKit_NSNotificationCenter 2
 #define COCOAPODS_VERSION_PATCH_PromiseKit_NSNotificationCenter 0
 
-// PromiseKit/Pause
-#define COCOAPODS_POD_AVAILABLE_PromiseKit_Pause
-#define COCOAPODS_VERSION_MAJOR_PromiseKit_Pause 1
-#define COCOAPODS_VERSION_MINOR_PromiseKit_Pause 2
-#define COCOAPODS_VERSION_PATCH_PromiseKit_Pause 0
-
 // PromiseKit/Promise
 #define COCOAPODS_POD_AVAILABLE_PromiseKit_Promise
 #define COCOAPODS_VERSION_MAJOR_PromiseKit_Promise 1
 #define COCOAPODS_VERSION_MINOR_PromiseKit_Promise 2
 #define COCOAPODS_VERSION_PATCH_PromiseKit_Promise 0
-
-// PromiseKit/SKProductsRequest
-#define COCOAPODS_POD_AVAILABLE_PromiseKit_SKProductsRequest
-#define COCOAPODS_VERSION_MAJOR_PromiseKit_SKProductsRequest 1
-#define COCOAPODS_VERSION_MINOR_PromiseKit_SKProductsRequest 2
-#define COCOAPODS_VERSION_PATCH_PromiseKit_SKProductsRequest 0
-
-// PromiseKit/SKRequest
-#define COCOAPODS_POD_AVAILABLE_PromiseKit_SKRequest
-#define COCOAPODS_VERSION_MAJOR_PromiseKit_SKRequest 1
-#define COCOAPODS_VERSION_MINOR_PromiseKit_SKRequest 2
-#define COCOAPODS_VERSION_PATCH_PromiseKit_SKRequest 0
-
-// PromiseKit/UIView
-#define COCOAPODS_POD_AVAILABLE_PromiseKit_UIView
-#define COCOAPODS_VERSION_MAJOR_PromiseKit_UIView 1
-#define COCOAPODS_VERSION_MINOR_PromiseKit_UIView 2
-#define COCOAPODS_VERSION_PATCH_PromiseKit_UIView 0
-
-// PromiseKit/UIViewController
-#define COCOAPODS_POD_AVAILABLE_PromiseKit_UIViewController
-#define COCOAPODS_VERSION_MAJOR_PromiseKit_UIViewController 1
-#define COCOAPODS_VERSION_MINOR_PromiseKit_UIViewController 2
-#define COCOAPODS_VERSION_PATCH_PromiseKit_UIViewController 0
-
-// PromiseKit/When
-#define COCOAPODS_POD_AVAILABLE_PromiseKit_When
-#define COCOAPODS_VERSION_MAJOR_PromiseKit_When 1
-#define COCOAPODS_VERSION_MINOR_PromiseKit_When 2
-#define COCOAPODS_VERSION_PATCH_PromiseKit_When 0
 
 // UIImage+ImageWithColor
 #define COCOAPODS_POD_AVAILABLE_UIImage_ImageWithColor

@@ -1,5 +1,5 @@
 #include "Pods-Spawner-YOLOKit.xcconfig"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1 ${PODS_SPAWNER_YOLOKIT_GCC_PREPROCESSOR_DEFINITIONS}
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Build" "${PODS_ROOT}/Headers/Build/YOLOKit" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/PromiseKit" "${PODS_ROOT}/Headers/Public/UIImage+ImageWithColor" "${PODS_ROOT}/Headers/Public/UIImage+InvertedImage" "${PODS_ROOT}/Headers/Public/YOLOKit" "${PODS_ROOT}/Headers/Public/initWith...FuckIt" "${PODS_ROOT}/Headers/Public/sym0"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Build" "${PODS_ROOT}/Headers/Build/YOLOKit" "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Doppelganger" "${PODS_ROOT}/Headers/Public/PromiseKit" "${PODS_ROOT}/Headers/Public/UIImage+ImageWithColor" "${PODS_ROOT}/Headers/Public/UIImage+InvertedImage" "${PODS_ROOT}/Headers/Public/YOLOKit" "${PODS_ROOT}/Headers/Public/initWith...FuckIt" "${PODS_ROOT}/Headers/Public/sym0"
 OTHER_LDFLAGS = -ObjC
 PODS_ROOT = ${SRCROOT}

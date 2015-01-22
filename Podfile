@@ -7,12 +7,8 @@ foo = %w{
 YOLOKit
 initWith...FuckIt
 PromiseKit/NSNotificationCenter
-PromiseKit/Pause
-PromiseKit/SKProductsRequest
-PromiseKit/UIView
-PromiseKit/UIViewController
-PromiseKit/When
 sym0
+Doppelganger
 UIImage+ImageWithColor
 UIImage+InvertedImage
 }

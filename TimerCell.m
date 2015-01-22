@@ -36,6 +36,8 @@
             for (NSNumber *weapon in self.package.weapons)
                 [SPAnnounce weapon:weapon.intValue];
             break;
+        case 30:
+        case 20:
         case 9:
         case 8:
         case 7:

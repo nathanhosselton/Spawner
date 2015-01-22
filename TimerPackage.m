@@ -1,4 +1,5 @@
 #import "main.h"
+#import <YOLOKit/YOLO.h>
 
 @implementation TimerPackage
 
@@ -19,6 +20,7 @@
             if (![self.weapons containsObject:weapon])
                 [self.weapons addObject:weapon];
         }
+//        [self.weapons sortUsingSelector:@selector(compare:)]; // Untested
         self.shouldExpire = NO;
         otherPackage.shouldExpire = YES;
         [self.delegate timerPackageWasMerged:otherPackage intoPackage:self];
