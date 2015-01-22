@@ -1,3 +1,4 @@
+//TODO: Move all of the Timer logic into new class
 #import <Foundation/Foundation.h>
 #import "main.h"
 @import UIKit.UITableView;
@@ -14,7 +15,7 @@
     UITableView *tv;
     NSTimer *timer;
     NSMutableArray *timers;
-    NSMutableArray *labels;
+    NSMutableArray *maps;
     CGRect mapLabelFrame;
 }
 
@@ -61,11 +62,10 @@
                                                    @"Prisoner",
                                                    @"Rat Race",
                                                    @"Wizard", nil];
-    labels = [NSMutableArray arrayWithCapacity:mapNames.count];
+    maps = [NSMutableArray arrayWithCapacity:mapNames.count];
     UILabel *lastLabel;
     for (NSString *map in mapNames) {
         UILabel *label = [[UILabel alloc] initWithFrame:mapLabelFrame];
-        label.center = CGPointMake(self.view.center.x, label.center.y);
         label.text = map;
         label.tag = [mapNames indexOfObject:map];
         label.textAlignment = NSTextAlignmentCenter;
@@ -76,11 +76,11 @@
         [label addGestureRecognizer:tap];
 
         [self.view insertSubview:label belowSubview:lastLabel ? lastLabel : self.view];
-        [labels addObject:label];
+        [maps addObject:label];
         lastLabel = label;
     }
-    self.currentMap = (MapIdentifier)((UILabel *)labels.firstObject).tag;
-    currentLabel = labels.firstObject;
+    self.currentMap = (MapIdentifier)((UILabel *)maps.firstObject).tag;
+    currentLabel = maps.firstObject;
 
 //////
     timers = [NSMutableArray arrayWithCapacity:4];
@@ -110,27 +110,24 @@
 
 - (void)timerDidReachZero:(TimerCell *)cell {
     [tv beginUpdates];
+
     int oldcount = (int)timers.count;
-    [timers removeObject:cell.package];
 
-    for (NSNumber *weapon in cell.package.weapons) {
-        TimerPackage *package = [TimerPackage packageforMap:self.currentMap weapon:weapon.intValue];
-        package.delegate = self;
-        [timers addObject:package];
-    }
-    [self validateTimers];
+    [self initializeNewTimersFromExpiredPackage:cell.package];
 
-    if (timers.count > oldcount) {
+    [tv deleteRowsAtIndexPaths:@[[tv indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationLeft];
+
+    if (timers.count >= oldcount){
         int dif = (int)timers.count - oldcount;
-        for (int i = 0; i < dif; i++) {
-            NSIndexPath *path = [NSIndexPath indexPathForRow:[tv indexPathForCell:cell].row+i inSection:[tv indexPathForCell:cell].section];
-            [tv insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationLeft];
+        for (int i = 0; i < dif+1; i++){
+            NSInteger row = [tv indexPathForCell:cell].row + i;
+            id path = [NSIndexPath indexPathForRow:row inSection:0];
+            [tv insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationRight];
         }
-    } else if (timers.count < oldcount)
-        [tv deleteRowsAtIndexPaths:@[[tv indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationLeft];
+    }
 
-    [tv reloadData];
-    [tv endUpdates];}
+    [tv endUpdates];
+}
 
 - (void)timerPackageWasMerged:(TimerPackage *)oldPackage intoPackage:(TimerPackage *)package {
     self.shouldValidateTimers = YES;
@@ -158,6 +155,18 @@
         [self validateTimers];
 }
 
+- (void)initializeNewTimersFromExpiredPackage:(TimerPackage *)pack {
+    [timers removeObject:pack];
+
+    for (NSNumber *weapon in pack.weapons) {
+        TimerPackage *package = [TimerPackage packageforMap:self.currentMap weapon:weapon.intValue];
+        package.delegate = self;
+        [timers addObject:package];
+    }
+
+    [self validateTimers];
+}
+
 - (UIColor *)colorForMapIndex:(MapIdentifier)mapIndex {
     switch (mapIndex) {
         case BattleCreek:
@@ -176,13 +185,13 @@
 - (void)onstart:(UIButton *)button {
     if (button.state == UIControlStateHighlighted) {
         timer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(ontime:) userInfo:nil repeats:YES];
-        for (UILabel *label in labels)
+        for (UILabel *label in maps)
             label.userInteractionEnabled = NO;
         [button setSelected:YES];
     } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
         [timer invalidate];
         [self setupTimers];
-        for (UILabel *label in labels)
+        for (UILabel *label in maps)
             label.userInteractionEnabled = YES;
         [button setSelected:NO];
     }
@@ -198,7 +207,7 @@
     if (self.mapListIsExpanded) {
         [self.view bringSubviewToFront:tap.view];
         [UIView animateWithDuration:0.2 animations:^{
-            for (UILabel *label in labels)
+            for (UILabel *label in maps)
                 label.frame = mapLabelFrame;
         }];
         self.currentMap = (MapIdentifier)tap.view.tag;
@@ -207,7 +216,7 @@
     } else {
         __block CGFloat y;
         [UIView animateWithDuration:0.2 animations:^{
-            for (UILabel *label in labels) {
+            for (UILabel *label in maps) {
                 y = (label.frame.size.height*1.1)*(label.tag+1);
                 label.center = CGPointMake(label.center.x, y);
             }

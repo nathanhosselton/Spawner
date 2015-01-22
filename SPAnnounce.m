@@ -26,25 +26,29 @@ static AVSpeechSynthesizer *announcer;
     });
 }
 
++ (void):(NSString *)line {
+    [announcer say:line];
+}
+
 + (void)weapon:(WeaponIdentifier)weapon {
-    NSString *speech;
+    NSString *line;
 
     switch (weapon) {
         case Rockets:
-            speech = @"rockets";
+            line = @"rockets";
             break;
         case Sniper:
-            speech = @"sniper";
+            line = @"sniper";
             break;
         case Overshield:
-            speech = @"over shield";
+            line = @"over shield";
             break;
         case Naked:
-            speech = @"naked";
+            line = @"naked";
             break;
     }
 
-    [announcer say:speech];
+    [announcer say:line];
 }
 
 + (void)count:(NSNumber *)count {

@@ -32,12 +32,13 @@
     _timerLabel.text = [NSString stringWithFormat:@"%d", count];
 
     switch (count) {
-        case 10:
+        case 30:
             for (NSNumber *weapon in self.package.weapons)
                 [SPAnnounce weapon:weapon.intValue];
+            [SPAnnounce:[NSString stringWithFormat:@"in %d seconds", count]];
             break;
-        case 30:
         case 20:
+        case 10:
         case 9:
         case 8:
         case 7:

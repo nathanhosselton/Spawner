@@ -58,6 +58,7 @@ typedef enum {
 @end
 
 @interface SPAnnounce : NSObject
++ (void):(NSString *)speech;
 + (void)weapon:(WeaponIdentifier)weapon;
 + (void)count:(NSNumber *)count;
 @end
