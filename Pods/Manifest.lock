@@ -1,5 +1,4 @@
 PODS:
-  - Doppelganger (1.3)
   - initWith...FuckIt (1.8.3)
   - PromiseKit/NSNotificationCenter (1.2):
     - PromiseKit/Promise
@@ -170,7 +169,6 @@ PODS:
     - YOLOKit/base
 
 DEPENDENCIES:
-  - Doppelganger
   - initWith...FuckIt
   - PromiseKit/NSNotificationCenter
   - sym0
@@ -179,7 +177,6 @@ DEPENDENCIES:
   - YOLOKit
 
 SPEC CHECKSUMS:
-  Doppelganger: 5f8ece005622fdcb01fe3e56e0ed7cad2fc4d5cb
   initWith...FuckIt: 8246df2664bb612c5f0e6bf54a948781d6411059
   PromiseKit: 89cb68ff4093e71221a63ca7272d427bf34c4560
   sym0: a68413a89bdcf78e9ad8b72fb637c1adcc311912

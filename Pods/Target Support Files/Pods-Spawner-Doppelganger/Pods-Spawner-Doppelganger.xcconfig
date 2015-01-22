@@ -1,1 +1,0 @@
-PODS_SPAWNER_DOPPELGANGER_OTHER_LDFLAGS = -framework "Foundation"

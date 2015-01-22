@@ -6,12 +6,6 @@
 // project.
 
 
-// Doppelganger
-#define COCOAPODS_POD_AVAILABLE_Doppelganger
-#define COCOAPODS_VERSION_MAJOR_Doppelganger 1
-#define COCOAPODS_VERSION_MINOR_Doppelganger 3
-#define COCOAPODS_VERSION_PATCH_Doppelganger 0
-
 // PromiseKit/NSNotificationCenter
 #define COCOAPODS_POD_AVAILABLE_PromiseKit_NSNotificationCenter
 #define COCOAPODS_VERSION_MAJOR_PromiseKit_NSNotificationCenter 1

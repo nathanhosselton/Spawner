@@ -8,7 +8,6 @@ YOLOKit
 initWith...FuckIt
 PromiseKit/NSNotificationCenter
 sym0
-Doppelganger
 UIImage+ImageWithColor
 UIImage+InvertedImage
 }
