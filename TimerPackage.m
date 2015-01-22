@@ -1,5 +1,4 @@
 #import "main.h"
-#import <YOLOKit/YOLO.h>
 
 @implementation TimerPackage
 
@@ -90,6 +89,30 @@
         }
     }
     return nil;
+}
+
+- (BOOL)isEqualToTimerPackage:(TimerPackage *)pack {
+    if (!pack)
+        return NO;
+
+    BOOL haveSameWeapons = (!self.weapons && !pack.weapons) || [self.weapons isEqualToArray:pack.weapons];
+    BOOL haveEqualTime = (!self.time && !pack.time) || [self.time isEqualToNumber:pack.time];
+
+    return haveSameWeapons && haveEqualTime;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self == object)
+        return YES;
+
+    if (![object isKindOfClass:[TimerPackage class]])
+        return NO;
+
+    return [self isEqualToTimerPackage:(TimerPackage *)object];
+}
+
+- (NSUInteger)hash {
+    return [self.weapons hash] ^ [self.time hash];
 }
 
 @end
