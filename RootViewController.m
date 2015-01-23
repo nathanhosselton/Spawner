@@ -1,5 +1,6 @@
 //TODO: Move all of the Timer logic into new class
 #import <Foundation/Foundation.h>
+#import <YOLO.h>
 #import "main.h"
 @import UIKit.UITableView;
 @import UIKit.UIButton;
@@ -198,7 +199,7 @@
 }
 
 - (void)ontime:(NSTimer *)time {
-    for (TimerCell *cell in [tv visibleCells])
+    for (TimerCell *cell in [tv visibleCells].reverse)
         [cell decrementTimer];
 }
 

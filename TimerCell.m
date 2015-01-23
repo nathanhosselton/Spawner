@@ -50,16 +50,12 @@
         case 1:
             [SPAnnounce count:@(count)];
             break;
+        case 0:
+            [self.delegate timerDidReachZero:self];
+            break;
 
         default:
             break;
-    }
-
-    if (count == 0){
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(100 * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
-            [self.delegate timerDidReachZero:self];
-        });
-        return;
     }
 }
 
