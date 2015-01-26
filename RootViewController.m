@@ -1,4 +1,3 @@
-//TODO: Move all of the Timer logic into new class
 #import <Foundation/Foundation.h>
 #import <YOLO.h>
 #import "main.h"
@@ -7,24 +6,19 @@
 @import UIKit.UIScreen;
 @import UIKit.UITapGestureRecognizer;
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerCellDelegate, TimerPackageDelegate>
-@property BOOL shouldValidateTimers;
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerCellDelegate>
 @end
 
 @implementation RootViewController {
     UILabel *currentLabel;
     UITableView *tv;
     NSTimer *timer;
-    NSMutableArray *timers;
     NSMutableArray *maps;
     CGRect mapLabelFrame;
 }
 
-@synthesize shouldValidateTimers = _shouldValidateTimers;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-
 
     CGFloat mapLabelHeight = 50.f;
     CGFloat mapLabelWidth = UIScreenWidth*(2.f/3.f);
@@ -80,92 +74,49 @@
         [maps addObject:label];
         lastLabel = label;
     }
-    self.currentMap = (MapIdentifier)((UILabel *)maps.firstObject).tag;
     currentLabel = maps.firstObject;
 
-//////
-    timers = [NSMutableArray arrayWithCapacity:4];
-    [self setupTimers];
+    [[TimerManager shared] setupTimersForMap:self.currentMap];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return timers.count;
+    return [TimerManager shared].timers.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TimerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(TimerCell.class) forIndexPath:indexPath];
 
-    cell.package = [timers objectAtIndex:indexPath.row];
+    cell.package = [[TimerManager shared].timers objectAtIndex:indexPath.row];
     cell.delegate = self;
     cell.backgroundView = nil;
-    cell.backgroundColor = [self colorForMapIndex:_currentMap];
+    cell.backgroundColor = [self colorForMapIndex:self.currentMap];
     //TODO: Create weapon images
     [cell layoutSubviews];
 
     return cell;
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return tableView.frame.size.height/timers.count;
-//}
-
 - (void)timerDidReachZero:(TimerCell *)cell {
     [tv beginUpdates];
 
-    int oldcount = (int)timers.count;
+    NSUInteger oldcount = [TimerManager shared].timers.count;
 
-    [self initializeNewTimersFromExpiredPackage:cell.package];
+    [[TimerManager shared] newTimersFromExpiredTimer:cell.package];
+
+    NSUInteger newcount = [TimerManager shared].timers.count;
 
     [tv deleteRowsAtIndexPaths:@[[tv indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationLeft];
 
-    if (timers.count >= oldcount){
-        int dif = (int)timers.count - oldcount;
-        for (int i = 0; i < dif+1; i++){
-            NSInteger row = [tv indexPathForCell:cell].row + i;
+    if (newcount >= oldcount) {
+        NSUInteger dif = newcount - oldcount;
+        for (NSUInteger i = 0; i < dif+1; i++) {
+            NSUInteger row = [tv indexPathForCell:cell].row + i;
             id path = [NSIndexPath indexPathForRow:row inSection:0];
             [tv insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationRight];
         }
     }
 
     [tv endUpdates];
-}
-
-- (void)timerPackageWasMerged:(TimerPackage *)oldPackage intoPackage:(TimerPackage *)package {
-    self.shouldValidateTimers = YES;
-}
-
-- (void)setupTimers {
-    [timers removeAllObjects];
-    for (int i = 0; i <= sizeof(WeaponIdentifier); i++) {
-        TimerPackage *package = [TimerPackage packageforMap:self.currentMap weapon:i];
-        if (package) {
-            package.delegate = self;
-            [timers addObject:package];
-        }
-    }
-    [self validateTimers];
-    [tv reloadData];
-}
-
-- (void)validateTimers {
-    [timers sortUsingSelector:@selector(comparePackage:)];
-    for (TimerPackage *package in timers.copy)
-        if (package.shouldExpire)
-            [timers removeObject:package];
-    if (self.shouldValidateTimers)
-        [self validateTimers];
-}
-
-- (void)initializeNewTimersFromExpiredPackage:(TimerPackage *)pack {
-    [timers removeObject:pack];
-
-    for (NSNumber *weapon in pack.weapons) {
-        TimerPackage *package = [TimerPackage packageforMap:self.currentMap weapon:weapon.intValue];
-        package.delegate = self;
-        [timers addObject:package];
-    }
-
-    [self validateTimers];
 }
 
 - (UIColor *)colorForMapIndex:(MapIdentifier)mapIndex {
@@ -191,7 +142,7 @@
         [button setSelected:YES];
     } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
         [timer invalidate];
-        [self setupTimers];
+        [[TimerManager shared] setupTimersForMap:self.currentMap];
         for (UILabel *label in maps)
             label.userInteractionEnabled = YES;
         [button setSelected:NO];
@@ -211,9 +162,9 @@
             for (UILabel *label in maps)
                 label.frame = mapLabelFrame;
         }];
-        self.currentMap = (MapIdentifier)tap.view.tag;
         currentLabel = (UILabel *)tap.view;
-        [self setupTimers];
+        [[TimerManager shared] setupTimersForMap:self.currentMap];
+        [tv reloadData];
     } else {
         __block CGFloat y;
         [UIView animateWithDuration:0.2 animations:^{
@@ -225,18 +176,12 @@
     }
 }
 
+- (MapIdentifier)currentMap {
+    return (MapIdentifier)currentLabel.tag;
+}
+
 - (BOOL)mapListIsExpanded {
-    return !(CGRectEqualToRect(currentLabel.frame, mapLabelFrame));
-}
-
-- (BOOL)shouldValidateTimers {
-    BOOL ret = _shouldValidateTimers;
-    _shouldValidateTimers = NO;
-    return ret;
-}
-
-- (void)setShouldValidateTimers:(BOOL)shouldValidateTimers {
-    _shouldValidateTimers = shouldValidateTimers;
+    return !CGRectEqualToRect(currentLabel.frame, mapLabelFrame);
 }
 
 @end

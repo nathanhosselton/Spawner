@@ -15,6 +15,7 @@
 		E94585A91A4657D200F155EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E94585A81A4657D200F155EC /* Images.xcassets */; };
 		E94585AC1A4657D200F155EC /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E94585AA1A4657D200F155EC /* LaunchScreen.xib */; };
 		E94585B81A4657D200F155EC /* SpawnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E94585B71A4657D200F155EC /* SpawnerTests.m */; };
+		E9A40A531A73325400E6A290 /* TimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E9A40A521A73325400E6A290 /* TimerManager.m */; };
 		E9EBE0EE1A56606A00C87320 /* TimerPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = E9EBE0ED1A56606A00C87320 /* TimerPackage.m */; };
 		E9F6AE461A46732C00AD65DB /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F6AE451A46732C00AD65DB /* RootViewController.m */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 		E94585B11A4657D200F155EC /* SpawnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpawnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E94585B61A4657D200F155EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E94585B71A4657D200F155EC /* SpawnerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpawnerTests.m; sourceTree = "<group>"; };
+		E9A40A521A73325400E6A290 /* TimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerManager.m; sourceTree = "<group>"; };
 		E9EBE0ED1A56606A00C87320 /* TimerPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerPackage.m; sourceTree = "<group>"; };
 		E9F6AE441A46678300AD65DB /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = SOURCE_ROOT; };
 		E9F6AE451A46732C00AD65DB /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
@@ -93,8 +95,9 @@
 				E9F6AE441A46678300AD65DB /* main.h */,
 				E945859D1A4657D200F155EC /* main.m */,
 				E9F6AE451A46732C00AD65DB /* RootViewController.m */,
-				E9EBE0ED1A56606A00C87320 /* TimerPackage.m */,
 				E92B4E031A47C31A00B40EB2 /* TimerCell.m */,
+				E9A40A521A73325400E6A290 /* TimerManager.m */,
+				E9EBE0ED1A56606A00C87320 /* TimerPackage.m */,
 				E907929B1A686416000F018F /* SPAnnounce.m */,
 				E94585A81A4657D200F155EC /* Images.xcassets */,
 				E945859B1A4657D200F155EC /* Supporting Files */,
@@ -280,6 +283,7 @@
 				E907929C1A686416000F018F /* SPAnnounce.m in Sources */,
 				E92B4E041A47C31A00B40EB2 /* TimerCell.m in Sources */,
 				E9EBE0EE1A56606A00C87320 /* TimerPackage.m in Sources */,
+				E9A40A531A73325400E6A290 /* TimerManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

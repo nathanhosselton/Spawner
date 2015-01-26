@@ -26,7 +26,7 @@
     }
     return result;
 }
-
+//TODO: MCC uses PC spawn times
 - (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon {
     if (weapon == Rockets) {
         switch (self.map) {

@@ -24,7 +24,6 @@ typedef enum {
 } WeaponIdentifier;
 
 @interface RootViewController : UIViewController
-@property MapIdentifier currentMap;
 @end
 
 #define WeaponImageViewSize 50.f
@@ -42,6 +41,14 @@ typedef enum {
 @property (nonatomic, weak) id<TimerPackageDelegate> delegate;
 - (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon;
 - (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage;
+@end
+
+@interface TimerManager : NSObject
++ (instancetype)shared;
+- (void)setupTimersForMap:(MapIdentifier)map;
+- (void)validateTimers;
+- (void)newTimersFromExpiredTimer:(TimerPackage *)package;
+@property (readonly) NSMutableArray *timers;
 @end
 
 @protocol TimerCellDelegate
