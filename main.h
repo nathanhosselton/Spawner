@@ -23,10 +23,12 @@ typedef enum {
     Naked
 } WeaponIdentifier;
 
+#define WeaponImageViewSize 50.f
+
+
 @interface RootViewController : UIViewController
 @end
 
-#define WeaponImageViewSize 50.f
 
 @protocol TimerPackageDelegate
 - (void)timerPackageWasMerged:(id)oldPackage intoPackage:(id)package;
@@ -43,13 +45,23 @@ typedef enum {
 - (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage;
 @end
 
-@interface TimerManager : NSObject
-+ (instancetype)shared;
+
+@protocol TimerManagerDelegate
+- (void)tick;
+@end
+
+@interface TimerManager : NSObject <TimerPackageDelegate>
+@property (nonatomic, weak) id<TimerManagerDelegate> delegate;
++ (instancetype)defaultManager;
 - (void)setupTimersForMap:(MapIdentifier)map;
 - (void)validateTimers;
 - (void)newTimersFromExpiredTimer:(TimerPackage *)package;
-@property (readonly) NSMutableArray *timers;
+- (void)start;
+- (void)stop;
+- (NSArray *)timers;
+- (NSUInteger)count;
 @end
+
 
 @protocol TimerCellDelegate
 - (void)timerDidReachZero:(id)cell;
@@ -63,6 +75,7 @@ typedef enum {
 @property (nonatomic, weak) id<TimerCellDelegate> delegate;
 - (void)decrementTimer;
 @end
+
 
 @interface SPAnnounce : NSObject
 + (void):(NSString *)speech;

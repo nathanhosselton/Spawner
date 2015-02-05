@@ -6,7 +6,7 @@
 @import UIKit.UIScreen;
 @import UIKit.UITapGestureRecognizer;
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerCellDelegate>
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerCellDelegate, TimerManagerDelegate>
 @end
 
 @implementation RootViewController {
@@ -22,10 +22,9 @@
 
     CGFloat mapLabelHeight = 50.f;
     CGFloat mapLabelWidth = UIScreenWidth*(2.f/3.f);
-    CGFloat lx = (UIScreenWidth - mapLabelWidth)/2;
-    mapLabelFrame = CGRectMake(lx, mapLabelHeight, mapLabelWidth, mapLabelHeight);
+    mapLabelFrame = CGRectMake((UIScreenWidth - mapLabelWidth)/2, mapLabelHeight, mapLabelWidth, mapLabelHeight);
 
-////// button
+////// start button
     UIButton *start = [UIButton buttonWithType:UIButtonTypeCustom];
     [start setFrame:CGRectMake(0, mapLabelHeight*3, 100.f, 50.f)];
     [start setCenter:CGPointMake(self.view.center.x, start.center.y)];
@@ -34,10 +33,10 @@
     [start addTarget:self action:@selector(onstart:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:start];
 
-////// table
-    CGFloat ty = mapLabelHeight*5;
-    CGRect trect = CGRectMake(0, ty, UIScreenWidth, UIScreenHeight-ty);
-    tv = [[UITableView alloc] initWithFrame:trect style:UITableViewStylePlain];
+////// tableview
+    CGFloat y = mapLabelHeight*5;
+    CGRect rect = CGRectMake(0, y, UIScreenWidth, UIScreenHeight-y);
+    tv = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
     [tv setBackgroundView:nil];
     [tv setBackgroundColor:[UIColor clearColor]];
     [tv setSeparatorColor:[UIColor colorWithWhite:0.100 alpha:1.000]];
@@ -76,17 +75,18 @@
     }
     currentLabel = maps.firstObject;
 
-    [[TimerManager shared] setupTimersForMap:self.currentMap];
+    [TimerManager defaultManager].delegate = self;
+    [[TimerManager defaultManager] setupTimersForMap:self.currentMap];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [TimerManager shared].timers.count;
+    return [TimerManager defaultManager].count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TimerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(TimerCell.class) forIndexPath:indexPath];
 
-    cell.package = [[TimerManager shared].timers objectAtIndex:indexPath.row];
+    cell.package = [[TimerManager defaultManager].timers objectAtIndex:indexPath.row];
     cell.delegate = self;
     cell.backgroundView = nil;
     cell.backgroundColor = [self colorForMapIndex:self.currentMap];
@@ -99,11 +99,11 @@
 - (void)timerDidReachZero:(TimerCell *)cell {
     [tv beginUpdates];
 
-    NSUInteger oldcount = [TimerManager shared].timers.count;
+    NSUInteger oldcount = [TimerManager defaultManager].count;
 
-    [[TimerManager shared] newTimersFromExpiredTimer:cell.package];
+    [[TimerManager defaultManager] newTimersFromExpiredTimer:cell.package];
 
-    NSUInteger newcount = [TimerManager shared].timers.count;
+    NSUInteger newcount = [TimerManager defaultManager].count;
 
     [tv deleteRowsAtIndexPaths:@[[tv indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationLeft];
 
@@ -117,6 +117,11 @@
     }
 
     [tv endUpdates];
+}
+
+- (void)tick {
+    for (TimerCell *cell in [tv visibleCells].reverse)
+        [cell decrementTimer];
 }
 
 - (UIColor *)colorForMapIndex:(MapIdentifier)mapIndex {
@@ -136,22 +141,18 @@
 
 - (void)onstart:(UIButton *)button {
     if (button.state == UIControlStateHighlighted) {
-        timer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(ontime:) userInfo:nil repeats:YES];
+        [[TimerManager defaultManager] start];
         for (UILabel *label in maps)
             label.userInteractionEnabled = NO;
         [button setSelected:YES];
     } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
-        [timer invalidate];
-        [[TimerManager shared] setupTimersForMap:self.currentMap];
+        [[TimerManager defaultManager] stop];
+        [[TimerManager defaultManager] setupTimersForMap:self.currentMap];
         for (UILabel *label in maps)
             label.userInteractionEnabled = YES;
+        [tv reloadData];
         [button setSelected:NO];
     }
-}
-
-- (void)ontime:(NSTimer *)time {
-    for (TimerCell *cell in [tv visibleCells].reverse)
-        [cell decrementTimer];
 }
 
 - (void)ontap:(UITapGestureRecognizer *)tap {
@@ -163,7 +164,7 @@
                 label.frame = mapLabelFrame;
         }];
         currentLabel = (UILabel *)tap.view;
-        [[TimerManager shared] setupTimersForMap:self.currentMap];
+        [[TimerManager defaultManager] setupTimersForMap:self.currentMap];
         [tv reloadData];
     } else {
         __block CGFloat y;
