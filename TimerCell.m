@@ -27,36 +27,12 @@
 }
 
 - (void)decrementTimer {
-    int count = _timerLabel.text.intValue-1;
-    self.package.time = @(count);
+    int count = self.package.time.intValue;
+
     _timerLabel.text = [NSString stringWithFormat:@"%d", count];
 
-    switch (count) {
-        case 30:
-            for (NSNumber *weapon in self.package.weapons)
-                [SPAnnounce weapon:weapon.intValue];
-            [SPAnnounce:[NSString stringWithFormat:@"in %d seconds", count]];
-            break;
-        case 20:
-        case 10:
-        case 9:
-        case 8:
-        case 7:
-        case 6:
-        case 5:
-        case 4:
-        case 3:
-        case 2:
-        case 1:
-            [SPAnnounce count:@(count)];
-            break;
-        case 0:
-            [self.delegate timerDidReachZero:self];
-            break;
-
-        default:
-            break;
-    }
+    if (count == 0)
+        [self.delegate timerDidReachZero:self];
 }
 
 @end

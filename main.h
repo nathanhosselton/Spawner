@@ -36,6 +36,8 @@ typedef enum {
 
 @interface TimerPackage : NSObject
 + (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
+- (void)announceIfNeeded;
+- (void)decrement;
 @property NSMutableArray *weapons;
 @property MapIdentifier map;
 @property NSNumber *time;

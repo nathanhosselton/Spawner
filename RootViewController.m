@@ -120,7 +120,7 @@
 }
 
 - (void)tick {
-    for (TimerCell *cell in [tv visibleCells].reverse)
+    for (TimerCell *cell in [tv visibleCells].reverse) // Probably don't need to reverse anymore
         [cell decrementTimer];
 }
 

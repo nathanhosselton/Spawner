@@ -57,6 +57,9 @@ static NSMutableArray *timers;
 }
 
 - (void)start {
+    for (TimerPackage *pack in timers)
+        pack.announceIfNeeded;
+
     globalTimer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(ontime:) userInfo:nil repeats:YES];
 }
 
@@ -73,6 +76,9 @@ static NSMutableArray *timers;
 }
 
 - (void)ontime:(NSTimer *)timer {
+    for (TimerPackage *pack in timers)
+        pack.decrement;
+
     [self.delegate tick];
 }
 

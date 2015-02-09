@@ -26,7 +26,41 @@
     }
     return result;
 }
-//TODO: MCC uses PC spawn times
+
+- (void)announceIfNeeded {
+    int time = self.time.intValue;
+
+    switch (time) {
+        case 30:
+            for (NSNumber *weapon in self.weapons)
+                [SPAnnounce weapon:weapon.intValue];
+            [SPAnnounce:[NSString stringWithFormat:@"in %d seconds", time]];
+            break;
+        case 20:
+        case 10:
+        case 9:
+        case 8:
+        case 7:
+        case 6:
+        case 5:
+        case 4:
+        case 3:
+        case 2:
+        case 1:
+            [SPAnnounce count:@(time)];
+            break;
+
+        default:
+            break;
+    }
+}
+
+- (void)decrement {
+    self.time = @(self.time.integerValue -1);
+
+    [self announceIfNeeded];
+}
+//TODO: MCC uses PC spawn times?
 - (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon {
     if (weapon == Rockets) {
         switch (self.map) {
