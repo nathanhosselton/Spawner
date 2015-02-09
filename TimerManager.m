@@ -5,6 +5,7 @@ static NSMutableArray *timers;
 
 @implementation TimerManager {
     NSTimer *globalTimer;
+    MapIdentifier lastMap;
     BOOL _shouldValidateTimers;
 }
 
@@ -29,7 +30,8 @@ static NSMutableArray *timers;
             [timers addObject:package];
         }
     }
-    
+
+    lastMap = map;
     [self validateTimers];
 }
 
@@ -37,7 +39,7 @@ static NSMutableArray *timers;
     [timers sortUsingSelector:@selector(comparePackage:)];
 
     for (TimerPackage *package in self.timers.copy)
-        if (package.shouldExpire)
+        if (package.isMerged)
             [timers removeObject:package];
 
     if (self.shouldValidateTimers)
@@ -56,15 +58,51 @@ static NSMutableArray *timers;
     [self validateTimers];
 }
 
+- (void)timerPackage:(TimerPackage *)oldPackage shouldMergeIntoPackage:(TimerPackage *)package {
+    for (NSNumber *weapon in oldPackage.weapons) {
+        if (![package.weapons containsObject:weapon])
+            [package.weapons addObject:weapon];
+    }
+
+    oldPackage.merged = YES;
+    _shouldValidateTimers = YES;
+}
+
 - (void)start {
     for (TimerPackage *pack in timers)
-        pack.announceIfNeeded;
+        [pack announceIfNeeded];
 
     globalTimer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(ontime:) userInfo:nil repeats:YES];
+    self.running = YES;
+}
+
+- (void)ontime:(NSTimer *)timer {
+    for (int i = (int)timers.count - 1; i >= 0; i--) {
+        TimerPackage *pack = [timers objectAtIndex:i];
+        [pack decrement];
+    }
+
+    [[timers firstObject] announceIfNeeded]; //Only works while supported weapon spawns are multiples of 30
+
+    [self.delegate tick];
 }
 
 - (void)stop {
     [globalTimer invalidate];
+    self.running = NO;
+
+    [self setupTimersForMap:lastMap];
+}
+
+- (void)timerDidReachZero:(TimerPackage *)pack {
+    NSInteger oldCount = timers.count;
+    NSUInteger index = [timers indexOfObject:pack];
+
+    [self newTimersFromExpiredTimer:pack];
+
+    [self.delegate timersDidRefreshAtIndex:index withCountDifference:timers.count - oldCount];
+
+    [[timers firstObject] announceIfNeeded];
 }
 
 - (NSArray *)timers {
@@ -73,17 +111,6 @@ static NSMutableArray *timers;
 
 - (NSUInteger)count {
     return timers.count;
-}
-
-- (void)ontime:(NSTimer *)timer {
-    for (TimerPackage *pack in timers)
-        pack.decrement;
-
-    [self.delegate tick];
-}
-
-- (void)timerPackageWasMerged:(id)oldPackage intoPackage:(id)package {
-    _shouldValidateTimers = YES;
 }
 
 - (BOOL)shouldValidateTimers {

@@ -31,33 +31,33 @@ typedef enum {
 
 
 @protocol TimerPackageDelegate
-- (void)timerPackageWasMerged:(id)oldPackage intoPackage:(id)package;
+- (void)timerPackage:(id)oldPackage shouldMergeIntoPackage:(id)package;
+- (void)timerDidReachZero:(id)pack;
 @end
 
 @interface TimerPackage : NSObject
-+ (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
-- (void)announceIfNeeded;
-- (void)decrement;
 @property NSMutableArray *weapons;
 @property MapIdentifier map;
 @property NSNumber *time;
-@property BOOL shouldExpire;
+@property (getter=isMerged) BOOL merged;
 @property (nonatomic, weak) id<TimerPackageDelegate> delegate;
-- (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon;
++ (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
+- (void)announceIfNeeded;
+- (void)decrement;
 - (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage;
 @end
 
 
 @protocol TimerManagerDelegate
 - (void)tick;
+- (void)timersDidRefreshAtIndex:(NSUInteger)index withCountDifference:(NSInteger)dif;
 @end
 
 @interface TimerManager : NSObject <TimerPackageDelegate>
+@property (getter=isRunning) BOOL running;
 @property (nonatomic, weak) id<TimerManagerDelegate> delegate;
 + (instancetype)defaultManager;
 - (void)setupTimersForMap:(MapIdentifier)map;
-- (void)validateTimers;
-- (void)newTimersFromExpiredTimer:(TimerPackage *)package;
 - (void)start;
 - (void)stop;
 - (NSArray *)timers;
@@ -65,16 +65,11 @@ typedef enum {
 @end
 
 
-@protocol TimerCellDelegate
-- (void)timerDidReachZero:(id)cell;
-@end
-
 @interface TimerCell : UITableViewCell
 @property TimerPackage *package;
 @property UILabel *timerLabel;
 @property UIImageView *primWpnImgView;
 @property UIImageView *subWpnImgView;
-@property (nonatomic, weak) id<TimerCellDelegate> delegate;
 - (void)decrementTimer;
 @end
 

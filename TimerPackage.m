@@ -12,18 +12,14 @@
 }
 
 - (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage {
-    NSLog(@"current pack: %@ other pack: %@", self.time, otherPackage.time);
+//    NSLog(@"current pack: %@ other pack: %@", self.time, otherPackage.time);
     NSComparisonResult result = [self.time compare:otherPackage.time];
-    if (result == NSOrderedSame) {
-        for (NSNumber *weapon in otherPackage.weapons) {
-            if (![self.weapons containsObject:weapon])
-                [self.weapons addObject:weapon];
-        }
-//        [self.weapons sortUsingSelector:@selector(compare:)]; // Untested
-        self.shouldExpire = NO;
-        otherPackage.shouldExpire = YES;
-        [self.delegate timerPackageWasMerged:otherPackage intoPackage:self];
+
+    if (result == NSOrderedSame && !otherPackage.isMerged && !self.isMerged) {
+        [self.delegate timerPackage:otherPackage shouldMergeIntoPackage:self];
+        [self.weapons sortUsingSelector:@selector(compare:)];
     }
+
     return result;
 }
 
@@ -49,6 +45,9 @@
         case 1:
             [SPAnnounce count:@(time)];
             break;
+        case 0:
+            [self.delegate timerDidReachZero:self];
+            break;
 
         default:
             break;
@@ -56,9 +55,7 @@
 }
 
 - (void)decrement {
-    self.time = @(self.time.integerValue -1);
-
-    [self announceIfNeeded];
+    self.time = @(self.time.integerValue - 1);
 }
 //TODO: MCC uses PC spawn times?
 - (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon {
@@ -124,6 +121,8 @@
     }
     return nil;
 }
+
+#pragma mark - Equality
 
 - (BOOL)isEqualToTimerPackage:(TimerPackage *)pack {
     if (!pack)

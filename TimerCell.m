@@ -27,12 +27,7 @@
 }
 
 - (void)decrementTimer {
-    int count = self.package.time.intValue;
-
-    _timerLabel.text = [NSString stringWithFormat:@"%d", count];
-
-    if (count == 0)
-        [self.delegate timerDidReachZero:self];
+    _timerLabel.text = self.package.time.stringValue;
 }
 
 @end

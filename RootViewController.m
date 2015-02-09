@@ -1,12 +1,11 @@
 #import <Foundation/Foundation.h>
-#import <YOLO.h>
 #import "main.h"
 @import UIKit.UITableView;
 @import UIKit.UIButton;
 @import UIKit.UIScreen;
 @import UIKit.UITapGestureRecognizer;
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerCellDelegate, TimerManagerDelegate>
+@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerManagerDelegate>
 @end
 
 @implementation RootViewController {
@@ -87,7 +86,6 @@
     TimerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(TimerCell.class) forIndexPath:indexPath];
 
     cell.package = [[TimerManager defaultManager].timers objectAtIndex:indexPath.row];
-    cell.delegate = self;
     cell.backgroundView = nil;
     cell.backgroundColor = [self colorForMapIndex:self.currentMap];
     //TODO: Create weapon images
@@ -96,23 +94,18 @@
     return cell;
 }
 
-- (void)timerDidReachZero:(TimerCell *)cell {
+- (void)timersDidRefreshAtIndex:(NSUInteger)index withCountDifference:(NSInteger)dif {
+    NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
+
     [tv beginUpdates];
 
-    NSUInteger oldcount = [TimerManager defaultManager].count;
+    [tv deleteRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationLeft];
 
-    [[TimerManager defaultManager] newTimersFromExpiredTimer:cell.package];
-
-    NSUInteger newcount = [TimerManager defaultManager].count;
-
-    [tv deleteRowsAtIndexPaths:@[[tv indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationLeft];
-
-    if (newcount >= oldcount) {
-        NSUInteger dif = newcount - oldcount;
+    if (dif >= 0) {
         for (NSUInteger i = 0; i < dif+1; i++) {
-            NSUInteger row = [tv indexPathForCell:cell].row + i;
-            id path = [NSIndexPath indexPathForRow:row inSection:0];
-            [tv insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationRight];
+            NSUInteger row = path.row + i;
+            id newPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [tv insertRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationRight];
         }
     }
 
@@ -120,7 +113,7 @@
 }
 
 - (void)tick {
-    for (TimerCell *cell in [tv visibleCells].reverse) // Probably don't need to reverse anymore
+    for (TimerCell *cell in [tv visibleCells])
         [cell decrementTimer];
 }
 
@@ -143,17 +136,10 @@
     if (button.state == UIControlStateHighlighted) {
         [[TimerManager defaultManager] start];
 
-        for (UILabel *label in maps)
-            label.userInteractionEnabled = NO;
-
         [button setSelected:YES];
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
         [[TimerManager defaultManager] stop];
-
-        [[TimerManager defaultManager] setupTimersForMap:self.currentMap];
-        for (UILabel *label in maps)
-            label.userInteractionEnabled = YES;
 
         [tv reloadData];
         [button setSelected:NO];
@@ -163,22 +149,24 @@
 
 - (void)ontap:(UITapGestureRecognizer *)tap {
 //    NSLog(@"%@ tapped", ((UILabel *)tap.view).text);
+    if ([TimerManager defaultManager].isRunning)
+        return;
+
     if (self.mapListIsExpanded) {
+        currentLabel = (UILabel *)tap.view;
+
         [self.view bringSubviewToFront:tap.view];
         [UIView animateWithDuration:0.2 animations:^{
             for (UILabel *label in maps)
                 label.frame = mapLabelFrame;
         }];
-        currentLabel = (UILabel *)tap.view;
+
         [[TimerManager defaultManager] setupTimersForMap:self.currentMap];
         [tv reloadData];
     } else {
-        __block CGFloat y;
         [UIView animateWithDuration:0.2 animations:^{
-            for (UILabel *label in maps) {
-                y = (label.frame.size.height*1.1)*(label.tag+1);
-                label.center = CGPointMake(label.center.x, y);
-            }
+            for (UILabel *label in maps)
+                label.center = CGPointMake(label.center.x, (label.frame.size.height * 1.1) * (label.tag + 1));
         }];
     }
 }
