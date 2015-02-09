@@ -142,16 +142,22 @@
 - (void)onstart:(UIButton *)button {
     if (button.state == UIControlStateHighlighted) {
         [[TimerManager defaultManager] start];
+
         for (UILabel *label in maps)
             label.userInteractionEnabled = NO;
+
         [button setSelected:YES];
+        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
         [[TimerManager defaultManager] stop];
+
         [[TimerManager defaultManager] setupTimersForMap:self.currentMap];
         for (UILabel *label in maps)
             label.userInteractionEnabled = YES;
+
         [tv reloadData];
         [button setSelected:NO];
+        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
 }
 
