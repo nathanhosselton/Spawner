@@ -39,6 +39,7 @@ typedef enum {
 @property NSMutableArray *weapons;
 @property MapIdentifier map;
 @property NSNumber *time;
+@property (nonatomic, getter=isNew) BOOL new;
 @property (getter=isMerged) BOOL merged;
 @property (nonatomic, weak) id<TimerPackageDelegate> delegate;
 + (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
@@ -50,7 +51,7 @@ typedef enum {
 
 @protocol TimerManagerDelegate
 - (void)tick;
-- (void)timersDidRefreshAtIndex:(NSUInteger)index withCountDifference:(NSInteger)dif;
+- (void)timersDidRefreshAtIndex:(NSUInteger)index;
 @end
 
 @interface TimerManager : NSObject <TimerPackageDelegate>

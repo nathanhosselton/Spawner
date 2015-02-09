@@ -52,6 +52,7 @@ static NSMutableArray *timers;
     for (NSNumber *weapon in pack.weapons) {
         TimerPackage *package = [TimerPackage packageforMap:pack.map weapon:weapon.intValue];
         package.delegate = self;
+        package.new = YES;
         [timers addObject:package];
     }
 
@@ -82,7 +83,7 @@ static NSMutableArray *timers;
         [pack decrement];
     }
 
-    [[timers firstObject] announceIfNeeded]; //Only works while supported weapon spawns are multiples of 30
+    [[timers firstObject] announceIfNeeded]; //Only works while weapon spawns are multiples of 30
 
     [self.delegate tick];
 }
@@ -95,12 +96,11 @@ static NSMutableArray *timers;
 }
 
 - (void)timerDidReachZero:(TimerPackage *)pack {
-    NSInteger oldCount = timers.count;
     NSUInteger index = [timers indexOfObject:pack];
 
     [self newTimersFromExpiredTimer:pack];
 
-    [self.delegate timersDidRefreshAtIndex:index withCountDifference:timers.count - oldCount];
+    [self.delegate timersDidRefreshAtIndex:index];
 
     [[timers firstObject] announceIfNeeded];
 }

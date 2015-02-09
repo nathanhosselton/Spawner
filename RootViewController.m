@@ -94,21 +94,18 @@
     return cell;
 }
 
-- (void)timersDidRefreshAtIndex:(NSUInteger)index withCountDifference:(NSInteger)dif {
-    NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
+- (void)timersDidRefreshAtIndex:(NSUInteger)index {
+    id oldPath = [NSIndexPath indexPathForRow:index inSection:0];
+    NSArray *timers = [TimerManager defaultManager].timers;
+    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
+
+    for (TimerPackage *pack in timers)
+        if (pack.isNew)
+            [paths addObject:[NSIndexPath indexPathForRow:[timers indexOfObject:pack] inSection:0]];
 
     [tv beginUpdates];
-
-    [tv deleteRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationLeft];
-
-    if (dif >= 0) {
-        for (NSUInteger i = 0; i < dif+1; i++) {
-            NSUInteger row = path.row + i;
-            id newPath = [NSIndexPath indexPathForRow:row inSection:0];
-            [tv insertRowsAtIndexPaths:@[newPath] withRowAnimation:UITableViewRowAnimationRight];
-        }
-    }
-
+    [tv deleteRowsAtIndexPaths:@[oldPath] withRowAnimation:UITableViewRowAnimationLeft];
+    [tv insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationRight];
     [tv endUpdates];
 }
 

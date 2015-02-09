@@ -122,6 +122,12 @@
     return nil;
 }
 
+- (BOOL)isNew {
+    BOOL ret = _new;
+    _new = NO;
+    return ret;
+}
+
 #pragma mark - Equality
 
 - (BOOL)isEqualToTimerPackage:(TimerPackage *)pack {
