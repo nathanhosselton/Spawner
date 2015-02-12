@@ -3,4 +3,4 @@ HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public
 OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/PromiseKit" -isystem "${PODS_ROOT}/Headers/Public/UIImage+ImageWithColor" -isystem "${PODS_ROOT}/Headers/Public/UIImage+InvertedImage" -isystem "${PODS_ROOT}/Headers/Public/YOLOKit" -isystem "${PODS_ROOT}/Headers/Public/initWith...FuckIt" -isystem "${PODS_ROOT}/Headers/Public/sym0"
 OTHER_LDFLAGS = -ObjC -l"Pods-Spawner-PromiseKit" -l"Pods-Spawner-UIImage+ImageWithColor" -l"Pods-Spawner-UIImage+InvertedImage" -l"Pods-Spawner-YOLOKit" -l"Pods-Spawner-initWith...FuckIt" -l"Pods-Spawner-sym0" -framework "Foundation" -framework "UIKit"
 OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
-PODS_ROOT = ${SRCROOT}/Pods
+PODS_ROOT = ${SRCROOT}/../Pods

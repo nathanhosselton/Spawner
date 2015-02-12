@@ -32,6 +32,11 @@ Then is always executed on the main dispatch queue (i.e the main/UI thread).
 - (PMKPromise *(^)(id))then;
 
 /**
+ The provided block is executed in the background on a default global queue.
+ */
+- (PMKPromise *(^)(id))thenInBackground;
+
+/**
  The provided block always runs on the main queue.
 */
 - (PMKPromise *(^)(id))catch;
@@ -129,3 +134,13 @@ PMKPromise *dispatch_promise(id block);
  @see dispatch_promise
  */
 PMKPromise *dispatch_promise_on(dispatch_queue_t q, id block);
+
+
+
+/**
+ Called by PromiseKit in the event of unhandled errors.
+ The default handler NSLogs the error. Note, your handler is executed
+ from an undefined queue, unless you manage thread-safe data, dispatch to
+ a safe queue before doing anything else in your handler.
+*/
+extern void (^PMKUnhandledErrorHandler)(NSError *);

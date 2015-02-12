@@ -1,6 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-xcodeproj 'Spawner.xcodeproj'
+xcodeproj 'Spawner.xcworkspace/Spawner.xcodeproj'
 workspace 'Spawner.xcworkspace'
 
 foo = %w{
