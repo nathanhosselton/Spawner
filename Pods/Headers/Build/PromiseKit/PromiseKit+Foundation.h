@@ -1,1 +1,4 @@
-../../../PromiseKit/objc/deprecated/PromiseKit+Foundation.h
+#warning This header is deprecated, #import <NS…+PromiseKit.h> instead.
+
+#import <NSURLConnection+PromiseKit.h>
+#import <NSNotificationCenter+PromiseKit.h>

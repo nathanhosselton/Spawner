@@ -1,8 +1,4 @@
-#import <sym0.h>
-@import UIKit.UIScreen;
 @import UIKit.UIViewController;
-@import UIKit.UITableViewCell;
-@import UIKit.UILabel;
 
 typedef enum {
     BattleCreek,
@@ -23,39 +19,46 @@ typedef enum {
     Naked
 } WeaponIdentifier;
 
-#define WeaponImageViewSize 50.f
+#define SPARespawnInterval 30
 
 
 @interface RootViewController : UIViewController
+- (MapIdentifier)currentMap;
+@end
+
+
+@interface UIView (Portal)
+@property UIImageView *portalImageView;
+- (void)setPortalImage:(UIImage *)image;
 @end
 
 
 @protocol TimerPackageDelegate
-- (void)timerPackage:(id)oldPackage shouldMergeIntoPackage:(id)package;
 - (void)timerDidReachZero:(id)pack;
 @end
 
 @interface TimerPackage : NSObject
-@property NSMutableArray *weapons;
+@property (readonly) NSMutableArray *weapons;
 @property MapIdentifier map;
 @property NSNumber *time;
-@property (nonatomic, getter=isNew) BOOL new;
-@property (getter=isMerged) BOOL merged;
+@property NSTimeInterval absoluteTime;
+@property NSTimeInterval relativeTime;
 @property (nonatomic, weak) id<TimerPackageDelegate> delegate;
-+ (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon;
++ (instancetype)packageforMap:(MapIdentifier)map atTime:(NSNumber *)time;
++ (int)weaponCountForMap:(MapIdentifier)map;
 - (void)announceIfNeeded;
 - (void)decrement;
-- (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage;
 @end
 
 
 @protocol TimerManagerDelegate
-- (void)tick;
-- (void)timersDidRefreshAtIndex:(NSUInteger)index;
+- (void)tick:(TimerPackage *)package;
+- (void)timersDidCycleToPackage:(TimerPackage *)package;
 @end
 
 @interface TimerManager : NSObject <TimerPackageDelegate>
-@property (getter=isRunning) BOOL running;
+@property TimerPackage *activePackage;
+@property (nonatomic, getter=isRunning) BOOL running;
 @property (nonatomic, weak) id<TimerManagerDelegate> delegate;
 + (instancetype)defaultManager;
 - (void)setupTimersForMap:(MapIdentifier)map;
@@ -66,16 +69,17 @@ typedef enum {
 @end
 
 
-@interface TimerCell : UITableViewCell
-@property TimerPackage *package;
-@property UILabel *timerLabel;
-@property UIImageView *primWpnImgView;
-@property UIImageView *subWpnImgView;
-- (void)decrementTimer;
+@interface SPATimerView : UIView <TimerManagerDelegate>
+@property UIImageView *rockets;
+@property UIImageView *sniper;
+@property UIImageView *overshield;
+@property UIImageView *naked;
+@property UILabel *time;
+- (void)configureWithTimerPackage:(TimerPackage *)package;
 @end
 
 
-@interface SPAnnounce : NSObject
+@interface SPAAnnounce : NSObject
 + (void):(NSString *)speech;
 + (void)weapon:(WeaponIdentifier)weapon;
 + (void)count:(NSNumber *)count;

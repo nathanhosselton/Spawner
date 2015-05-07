@@ -7,32 +7,33 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4379AF5E1AFAA593001B3E8B /* SPATimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4379AF5D1AFAA593001B3E8B /* SPATimerView.m */; };
 		E907929A1A686180000F018F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90792991A686180000F018F /* AVFoundation.framework */; };
 		E9DF23731A8D1A2B00EFDC91 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DF236D1A8D1A2B00EFDC91 /* main.m */; };
 		E9DF23741A8D1A2B00EFDC91 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DF236E1A8D1A2B00EFDC91 /* RootViewController.m */; };
-		E9DF23751A8D1A2B00EFDC91 /* SPAnnounce.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DF236F1A8D1A2B00EFDC91 /* SPAnnounce.m */; };
-		E9DF23761A8D1A2B00EFDC91 /* TimerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DF23701A8D1A2B00EFDC91 /* TimerCell.m */; };
+		E9DF23751A8D1A2B00EFDC91 /* SPAAnnounce.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DF236F1A8D1A2B00EFDC91 /* SPAAnnounce.m */; };
 		E9DF23771A8D1A2B00EFDC91 /* TimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DF23711A8D1A2B00EFDC91 /* TimerManager.m */; };
 		E9DF23781A8D1A2B00EFDC91 /* TimerPackage.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DF23721A8D1A2B00EFDC91 /* TimerPackage.m */; };
 		E9DF237A1A8D1A3D00EFDC91 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E9DF23791A8D1A3D00EFDC91 /* Images.xcassets */; };
-		E9DF23891A8D2E2B00EFDC91 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E9DF23881A8D2E2B00EFDC91 /* Info.plist */; };
+		E9DF238C1A8D37CA00EFDC91 /* UIView+Portal.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DF238B1A8D37CA00EFDC91 /* UIView+Portal.m */; };
 		F35812AC9CBCB3AA5F5B52E5 /* libPods-Spawner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F717D4ADD743C22AE3A2A1EE /* libPods-Spawner.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2C77D40314397A4878339BE0 /* Pods-Spawner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spawner.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Spawner/Pods-Spawner.release.xcconfig"; sourceTree = "<group>"; };
+		4379AF5D1AFAA593001B3E8B /* SPATimerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPATimerView.m; path = ../Sources/SPATimerView.m; sourceTree = "<group>"; };
 		6AF416B1B43AA2F12666A9D0 /* Pods-Spawner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spawner.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-Spawner/Pods-Spawner.debug.xcconfig"; sourceTree = "<group>"; };
 		E90792991A686180000F018F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		E94585981A4657D200F155EC /* Spawner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spawner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DF236C1A8D1A2B00EFDC91 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = ../Sources/main.h; sourceTree = "<group>"; };
 		E9DF236D1A8D1A2B00EFDC91 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ../Sources/main.m; sourceTree = "<group>"; };
 		E9DF236E1A8D1A2B00EFDC91 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootViewController.m; path = ../Sources/RootViewController.m; sourceTree = "<group>"; };
-		E9DF236F1A8D1A2B00EFDC91 /* SPAnnounce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPAnnounce.m; path = ../Sources/SPAnnounce.m; sourceTree = "<group>"; };
-		E9DF23701A8D1A2B00EFDC91 /* TimerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimerCell.m; path = ../Sources/TimerCell.m; sourceTree = "<group>"; };
+		E9DF236F1A8D1A2B00EFDC91 /* SPAAnnounce.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SPAAnnounce.m; path = ../Sources/SPAAnnounce.m; sourceTree = "<group>"; };
 		E9DF23711A8D1A2B00EFDC91 /* TimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimerManager.m; path = ../Sources/TimerManager.m; sourceTree = "<group>"; };
 		E9DF23721A8D1A2B00EFDC91 /* TimerPackage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TimerPackage.m; path = ../Sources/TimerPackage.m; sourceTree = "<group>"; };
 		E9DF23791A8D1A3D00EFDC91 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../Images.xcassets; sourceTree = "<group>"; };
 		E9DF23881A8D2E2B00EFDC91 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		E9DF238B1A8D37CA00EFDC91 /* UIView+Portal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Portal.m"; path = "../Sources/UIView+Portal.m"; sourceTree = "<group>"; };
 		F717D4ADD743C22AE3A2A1EE /* libPods-Spawner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Spawner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -73,10 +74,11 @@
 				E9DF236C1A8D1A2B00EFDC91 /* main.h */,
 				E9DF236D1A8D1A2B00EFDC91 /* main.m */,
 				E9DF236E1A8D1A2B00EFDC91 /* RootViewController.m */,
-				E9DF236F1A8D1A2B00EFDC91 /* SPAnnounce.m */,
-				E9DF23701A8D1A2B00EFDC91 /* TimerCell.m */,
+				4379AF5D1AFAA593001B3E8B /* SPATimerView.m */,
 				E9DF23711A8D1A2B00EFDC91 /* TimerManager.m */,
 				E9DF23721A8D1A2B00EFDC91 /* TimerPackage.m */,
+				E9DF236F1A8D1A2B00EFDC91 /* SPAAnnounce.m */,
+				E9DF238B1A8D37CA00EFDC91 /* UIView+Portal.m */,
 				E9DF23791A8D1A3D00EFDC91 /* Images.xcassets */,
 				E945859B1A4657D200F155EC /* Supporting Files */,
 				E94585991A4657D200F155EC /* Products */,
@@ -130,11 +132,12 @@
 		E94585901A4657D200F155EC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Nathan Hosselton";
 				TargetAttributes = {
 					E94585971A4657D200F155EC = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = GTZ6E2N5Z9;
 					};
 				};
 			};
@@ -162,7 +165,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9DF237A1A8D1A3D00EFDC91 /* Images.xcassets in Resources */,
-				E9DF23891A8D2E2B00EFDC91 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,11 +209,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9DF23771A8D1A2B00EFDC91 /* TimerManager.m in Sources */,
+				E9DF238C1A8D37CA00EFDC91 /* UIView+Portal.m in Sources */,
 				E9DF23781A8D1A2B00EFDC91 /* TimerPackage.m in Sources */,
 				E9DF23741A8D1A2B00EFDC91 /* RootViewController.m in Sources */,
-				E9DF23761A8D1A2B00EFDC91 /* TimerCell.m in Sources */,
 				E9DF23731A8D1A2B00EFDC91 /* main.m in Sources */,
-				E9DF23751A8D1A2B00EFDC91 /* SPAnnounce.m in Sources */,
+				4379AF5E1AFAA593001B3E8B /* SPATimerView.m in Sources */,
+				E9DF23751A8D1A2B00EFDC91 /* SPAAnnounce.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,8 +303,28 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/PromiseKit\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/UIImage+ImageWithColor\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/UIImage+InvertedImage\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/YOLOKit\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/initWith...FuckIt\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/sym0\"",
+					"-include",
+					main.h,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -312,8 +335,28 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/PromiseKit\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/UIImage+ImageWithColor\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/UIImage+InvertedImage\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/YOLOKit\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/initWith...FuckIt\"",
+					"-isystem",
+					"\"${PODS_ROOT}/Headers/Public/sym0\"",
+					"-include",
+					main.h,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

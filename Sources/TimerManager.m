@@ -1,6 +1,3 @@
-#import "main.h"
-
-
 static NSMutableArray *timers;
 
 @implementation TimerManager {
@@ -13,8 +10,8 @@ static NSMutableArray *timers;
     static id _sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [[self alloc] init];
-        timers = [NSMutableArray arrayWithCapacity:4];
+        _sharedInstance = [TimerManager new];
+        timers = [NSMutableArray new];
     });
 
     return _sharedInstance;
@@ -23,87 +20,55 @@ static NSMutableArray *timers;
 - (void)setupTimersForMap:(MapIdentifier)map {
     [timers removeAllObjects];
 
-    for (int i = 0; i <= sizeof(WeaponIdentifier); i++) {
-        TimerPackage *package = [TimerPackage packageforMap:map weapon:i];
+    int maxWeapons = [TimerPackage weaponCountForMap:map];
+    int time = SPARespawnInterval;
+    TimerPackage *lastPack;
+
+    do {
+        TimerPackage *package = [TimerPackage packageforMap:map atTime:@(time)];
         if (package) {
             package.delegate = self;
+            package.relativeTime = package.absoluteTime - lastPack.absoluteTime;
+            package.time = @(package.relativeTime);
             [timers addObject:package];
+            lastPack = package;
         }
-    }
+        time += SPARespawnInterval;
+    } while (lastPack.weapons.count < maxWeapons);
 
+    self.activePackage = timers.firstObject;
     lastMap = map;
-    [self validateTimers];
 }
-
-- (void)validateTimers {
-    [timers sortUsingSelector:@selector(comparePackage:)];
-
-    for (TimerPackage *package in self.timers.copy)
-        if (package.isMerged)
-            [timers removeObject:package];
-
-    if (self.shouldValidateTimers)
-        [self validateTimers];
-}
-
-- (void)newTimersFromExpiredTimer:(TimerPackage *)pack {
-    [timers removeObject:pack];
-
-    for (NSNumber *weapon in pack.weapons) {
-        TimerPackage *package = [TimerPackage packageforMap:pack.map weapon:weapon.intValue];
-        package.delegate = self;
-        package.new = YES;
-        [timers addObject:package];
-    }
-
-    [self validateTimers];
-}
-
-- (void)timerPackage:(TimerPackage *)oldPackage shouldMergeIntoPackage:(TimerPackage *)package {
-    for (NSNumber *weapon in oldPackage.weapons) {
-        if (![package.weapons containsObject:weapon])
-            [package.weapons addObject:weapon];
-    }
-
-//    package.new = YES; // Might need this for properly reloading TV
-    oldPackage.merged = YES;
-    _shouldValidateTimers = YES;
-}
-
 - (void)start {
-    for (TimerPackage *pack in timers)
-        [pack announceIfNeeded];
-
+    [self.activePackage announceIfNeeded];
     globalTimer = [NSTimer scheduledTimerWithTimeInterval:1.f target:self selector:@selector(ontime:) userInfo:nil repeats:YES];
     self.running = YES;
 }
 
 - (void)ontime:(NSTimer *)timer {
-    for (int i = (int)timers.count - 1; i >= 0; i--) {
-        TimerPackage *pack = [timers objectAtIndex:i];
-        [pack decrement];
-    }
-
-    [[timers firstObject] announceIfNeeded]; //Only works while weapon spawns are multiples of 30
-
-    [self.delegate tick];
+    [self.activePackage decrement];
+    [self.activePackage announceIfNeeded];
+    
+    [self.delegate tick:self.activePackage]; //Use case for KVO?
 }
 
 - (void)stop {
     [globalTimer invalidate];
+    self.activePackage = nil;
     self.running = NO;
 
     [self setupTimersForMap:lastMap];
 }
 
-- (void)timerDidReachZero:(TimerPackage *)pack {
-    NSUInteger index = [timers indexOfObject:pack];
+- (void)timerDidReachZero:(TimerPackage *)oldPackage {
+    NSUInteger newIndex = [timers indexOfObject:oldPackage] + 1;
+    self.activePackage = [timers objectAtIndex:newIndex < timers.count ? newIndex : 0];
 
-    [self newTimersFromExpiredTimer:pack];
+    [self.delegate timersDidCycleToPackage:self.activePackage];
 
-    [self.delegate timersDidRefreshAtIndex:index];
+//    [self.activePackage announceIfNeeded];
 
-    [[timers firstObject] announceIfNeeded];
+    oldPackage.time = @(oldPackage.relativeTime);
 }
 
 - (NSArray *)timers {
@@ -114,10 +79,9 @@ static NSMutableArray *timers;
     return timers.count;
 }
 
-- (BOOL)shouldValidateTimers {
-    BOOL ret = _shouldValidateTimers;
-    _shouldValidateTimers = NO;
-    return ret;
+- (void)setRunning:(BOOL)running {
+    _running = running;
+    [[UIApplication sharedApplication] setIdleTimerDisabled:running];
 }
 
 @end

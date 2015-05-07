@@ -1,5 +1,6 @@
+#import <sym0.h>
+@import UIKit.UIScreen;
 @import UIKit.UIWindow;
-#import "main.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (strong, nonatomic) UIWindow *window;

@@ -1,26 +1,31 @@
-#import "main.h"
+@interface TimerPackage ()
+@property (readwrite) NSMutableArray *weapons;
+@end
 
 @implementation TimerPackage
 
-+ (instancetype)packageforMap:(MapIdentifier)map weapon:(WeaponIdentifier)weapon {
++ (instancetype)packageforMap:(MapIdentifier)map atTime:(NSNumber *)time {
     TimerPackage *package = [TimerPackage new];
-    package.weapons = [NSMutableArray arrayWithObject:@(weapon)];
+    package.weapons = [NSMutableArray arrayWithCapacity:4];
     package.map = map;
-    package.time = [package timeForWeapon:weapon];
+    package.absoluteTime = time.integerValue;
 
-    return package.time ? package : nil;
-}
-
-- (NSComparisonResult)comparePackage:(TimerPackage *)otherPackage {
-//    NSLog(@"current pack: %@ other pack: %@", self.time, otherPackage.time);
-    NSComparisonResult result = [self.time compare:otherPackage.time];
-
-    if (result == NSOrderedSame && !otherPackage.isMerged && !self.isMerged) {
-        [self.delegate timerPackage:otherPackage shouldMergeIntoPackage:self];
-        [self.weapons sortUsingSelector:@selector(compare:)];
+    for (int i = 0; i < sizeof(WeaponIdentifier); i++) {
+        int weapontime = [TimerPackage timeForWeapon:i onMap:map].intValue;
+        if (weapontime)
+            if (time.intValue % weapontime == 0)
+                [package.weapons addObject:@(i)];
     }
 
-    return result;
+    return package.weapons.count ? package : nil;
+}
+
++ (int)weaponCountForMap:(MapIdentifier)map {
+    int cnt = 0;
+    for (int i = 0; i <= sizeof(WeaponIdentifier); i++)
+        if ([TimerPackage timeForWeapon:i onMap:map])
+            cnt++;
+    return cnt;
 }
 
 - (void)announceIfNeeded {
@@ -29,8 +34,8 @@
     switch (time) {
         case 30:
             for (NSNumber *weapon in self.weapons)
-                [SPAnnounce weapon:weapon.intValue];
-            [SPAnnounce:[NSString stringWithFormat:@"in %d seconds", time]];
+                [SPAAnnounce weapon:weapon.intValue];
+            [SPAAnnounce:[NSString stringWithFormat:@"in %d seconds", time]];
             break;
         case 20:
         case 10:
@@ -43,11 +48,11 @@
         case 3:
         case 2:
         case 1:
-            [SPAnnounce count:@(time)];
+            [SPAAnnounce count:@(time)];
             break;
-        case 0:
-            [self.delegate timerDidReachZero:self];
-            break;
+//        case 0:
+//            [self.delegate timerDidReachZero:self];
+//            break;
 
         default:
             break;
@@ -56,11 +61,15 @@
 
 - (void)decrement {
     self.time = @(self.time.integerValue - 1);
+
+    if (!self.time.integerValue)
+        [self.delegate timerDidReachZero:self];
 }
+
 //TODO: MCC uses PC spawn times?
-- (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon {
++ (NSNumber *)timeForWeapon:(WeaponIdentifier)weapon onMap:(MapIdentifier)map {
     if (weapon == Rockets) {
-        switch (self.map) {
+        switch (map) {
             case Derelict:
                 return @30;
             case BattleCreek:
@@ -75,7 +84,7 @@
                 break;
         }
     } else if (weapon == Sniper) {
-        switch (self.map) {
+        switch (map) {
             case BattleCreek:
             case Damnation:
             case Derelict:
@@ -90,7 +99,7 @@
                 break;
         }
     } else if (weapon == Overshield) {
-        switch (self.map) {
+        switch (map) {
             case BattleCreek:
             case ChillOut:
             case Damnation:
@@ -104,7 +113,7 @@
                 return @180;
         }
     } else if (weapon == Naked) {
-        switch (self.map) {
+        switch (map) {
             case BattleCreek:
             case Damnation:
             case Derelict:
@@ -120,38 +129,6 @@
         }
     }
     return nil;
-}
-
-- (BOOL)isNew {
-    BOOL ret = _new;
-    _new = NO;
-    return ret;
-}
-
-#pragma mark - Equality
-
-- (BOOL)isEqualToTimerPackage:(TimerPackage *)pack {
-    if (!pack)
-        return NO;
-
-    BOOL haveSameWeapons = (!self.weapons && !pack.weapons) || [self.weapons isEqualToArray:pack.weapons];
-    BOOL haveEqualTime = (!self.time && !pack.time) || [self.time isEqualToNumber:pack.time];
-
-    return haveSameWeapons && haveEqualTime;
-}
-
-- (BOOL)isEqual:(id)object {
-    if (self == object)
-        return YES;
-
-    if (![object isKindOfClass:[TimerPackage class]])
-        return NO;
-
-    return [self isEqualToTimerPackage:(TimerPackage *)object];
-}
-
-- (NSUInteger)hash {
-    return [self.weapons hash] ^ [self.time hash];
 }
 
 @end

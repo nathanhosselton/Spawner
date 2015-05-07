@@ -1,22 +1,23 @@
-#import <Foundation/Foundation.h>
-#import "main.h"
-@import UIKit.UITableView;
-@import UIKit.UIButton;
+#import <sym0.h>
 @import UIKit.UIScreen;
 @import UIKit.UITapGestureRecognizer;
+@import UIKit.UIButton;
+@import UIKit.UILabel;
 
-@interface RootViewController () <UITableViewDataSource, UITableViewDelegate, TimerManagerDelegate>
+@interface RootViewController ()
 @end
 
 @implementation RootViewController {
     UILabel *currentLabel;
-    UITableView *tv;
+    SPATimerView *timerView;
     NSMutableArray *maps;
     CGRect mapLabelOrigin;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+//    [self.view setPortalImage:[UIImage imageNamed:[self mapname:self.currentMap]]];
 
     CGFloat mapLabelHeight = 50.f;
     CGFloat mapLabelWidth = UIScreenWidth*(2.f/3.f);
@@ -31,18 +32,10 @@
     [start addTarget:self action:@selector(onstart:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:start];
 
-////// tableview
-    CGFloat y = mapLabelHeight*5;
-    CGRect rect = CGRectMake(0, y, UIScreenWidth, UIScreenHeight-y);
-    tv = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
-    [tv setBackgroundView:nil];
-    [tv setBackgroundColor:[UIColor clearColor]];
-    [tv setSeparatorColor:[UIColor colorWithWhite:0.100 alpha:1.000]];
-    [tv setUserInteractionEnabled:NO];
-    [tv registerClass:[TimerCell class] forCellReuseIdentifier:NSStringFromClass(TimerCell.class)];
-    [self.view addSubview:tv];
-    tv.delegate = self;
-    tv.dataSource = self;
+////// timerview
+    timerView = [[SPATimerView alloc] initWithFrame:CGRectMake(0.f, UIScreenHeight - 150.f, UIScreenWidth, 150.f)];
+    [timerView layoutSubviews];
+    [self.view addSubview:timerView];
 
 ////// map picker
     NSArray *mapNames = [NSArray arrayWithObjects: @"Battle Creek",
@@ -63,6 +56,7 @@
         label.textAlignment = NSTextAlignmentCenter;
         label.backgroundColor = [self colorForMapIndex:(MapIdentifier)label.tag];
         label.userInteractionEnabled = YES;
+//        [label setPortalImage:[UIImage imageNamed:[self mapname:(MapIdentifier)label.tag]]];
 
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(ontap:)];
         [label addGestureRecognizer:tap];
@@ -73,44 +67,9 @@
     }
     currentLabel = maps.firstObject;
 
-    [TimerManager defaultManager].delegate = self;
+    [TimerManager defaultManager].delegate = timerView;
     [[TimerManager defaultManager] setupTimersForMap:self.currentMap];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [TimerManager defaultManager].count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    TimerCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass(TimerCell.class) forIndexPath:indexPath];
-
-    cell.package = [[TimerManager defaultManager].timers objectAtIndex:indexPath.row];
-    cell.backgroundView = nil;
-    cell.backgroundColor = [self colorForMapIndex:self.currentMap];
-    //TODO: Create weapon images
-    [cell layoutSubviews];
-
-    return cell;
-}
-
-- (void)timersDidRefreshAtIndex:(NSUInteger)index {
-    id oldPath = [NSIndexPath indexPathForRow:index inSection:0];
-    NSArray *timers = [TimerManager defaultManager].timers;
-    NSMutableArray *paths = [NSMutableArray arrayWithCapacity:4];
-
-    for (TimerPackage *pack in timers)
-        if (pack.isNew)
-            [paths addObject:[NSIndexPath indexPathForRow:[timers indexOfObject:pack] inSection:0]];
-
-    [tv beginUpdates];
-    [tv deleteRowsAtIndexPaths:@[oldPath] withRowAnimation:UITableViewRowAnimationLeft];
-    [tv insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationRight];
-    [tv endUpdates];
-}
-
-- (void)tick {
-    for (TimerCell *cell in [tv visibleCells])
-        [cell decrementTimer];
+    [timerView configureWithTimerPackage:[TimerManager defaultManager].activePackage];
 }
 
 - (UIColor *)colorForMapIndex:(MapIdentifier)mapIndex {
@@ -133,13 +92,11 @@
         [[TimerManager defaultManager] start];
 
         [button setSelected:YES];
-        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     } else if (button.state == (UIControlStateHighlighted | UIControlStateSelected)) {
         [[TimerManager defaultManager] stop];
 
-        [tv reloadData];
+        [timerView configureWithTimerPackage:[TimerManager defaultManager].activePackage];
         [button setSelected:NO];
-        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
 }
 
@@ -159,7 +116,7 @@
         }];
 
         [[TimerManager defaultManager] setupTimersForMap:self.currentMap];
-        [tv reloadData];
+        [timerView configureWithTimerPackage:[TimerManager defaultManager].activePackage];
     } else {
         [UIView animateWithDuration:0.2 animations:^{
             for (UILabel *label in maps)
@@ -169,8 +126,28 @@
 }
 
 - (MapIdentifier)currentMap {
-    return (MapIdentifier)currentLabel.tag;
+    if (currentLabel)
+        return (MapIdentifier)currentLabel.tag;
+
+    return 0;
 }
+
+//- (NSString *)mapname:(MapIdentifier)map {
+//#define macro(x) case x: return @#x;
+//
+//    switch (map) {
+//            macro(BattleCreek)
+//            macro(ChillOut)
+//            macro(Damnation)
+//            macro(Derelict)
+//            macro(HangEmHigh)
+//            macro(Longest)
+//            macro(Prisoner)
+//            macro(RatRace)
+//            macro(Wizard)
+//    }
+//    return nil;
+//}
 
 - (BOOL)mapListIsExpanded {
     return !CGRectEqualToRect(currentLabel.frame, mapLabelOrigin);
